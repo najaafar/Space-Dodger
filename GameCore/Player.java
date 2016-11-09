@@ -11,7 +11,8 @@ public class Player extends Entity{
 	int velX = 0, velY = 0;
 	int speed = 2;
 	String username;
-	
+	boolean shoot_yes = false;
+
 	/*  after n collisions, player dies
 		int life = 3;
 	*/
