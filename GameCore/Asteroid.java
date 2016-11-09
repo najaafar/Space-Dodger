@@ -10,6 +10,7 @@ public class Asteroid extends Entity{
 	/* Used if player can destroy asteroids
 		int life = 1;
 	*/
+	int startX, startY;
 	
 	public Asteroid(int x, int y){
 	
