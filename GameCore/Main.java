@@ -15,11 +15,6 @@ public class Main{
 		socket = new DatagramSocket();
 	
 		if(connectToServer()){
-			// send request to server
-			// receive message from server with returned coordinates
-					// lagay mo sa list of points?
-			// pag sinabi ng server na 3 na, execute JFrame
-
 			JFrame frame = new JFrame("Space Dodger");
 			frame.setSize(500, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,7 +48,9 @@ public class Main{
 		x = Integer.parseInt(coordinates[0]);
 		y = Integer.parseInt(coordinates[1]);
 		System.out.println(x + ", " + y);
-		return true;
+
+		if(x != 0 && y != 0) return true;
+		return false;
 	}
 
 

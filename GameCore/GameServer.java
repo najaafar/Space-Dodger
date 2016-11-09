@@ -33,7 +33,7 @@ public class GameServer {
 			int x = random.nextInt(400 - 100 + 1) + 100;
 			int y = random.nextInt(400 - 100 + 1) + 100;
 
-			// For multiple players, pag complete na tsaka mag-assign. Randomize then shuffle.
+			// For multiple players, pag complete na tsaka mag-assign. Randomize points then shuffle.
 
 			System.out.println(player + " has joined. Coordinates are: (" + x + ", " + y + ").");
 
