@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.Point;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -17,10 +18,10 @@ public class GameFrame extends JPanel implements ActionListener{
 	int asteroidCount = 2;
 	public static int level = 1;
 	
-	public GameFrame(){
+	public GameFrame(Point playerXY, ArrayList<Point> players){
 	
 		setFocusable(true);
-		player = new Player(200, 400);
+		player = new Player((int) playerXY.getX(), (int) playerXY.getY());	// get form server
 		addKeyListener(new KeyAdapt(player));
 		
 		mainTimer = new Timer(5, this);
