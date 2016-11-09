@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.Point;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -18,10 +19,10 @@ public class GameFrame extends JPanel implements ActionListener{
 	int asteroidCount = 2;
 	public static int level = 1;
 	
-	public GameFrame(Point playerXY, ArrayList<Point> players){
+	public GameFrame(Player player){
 	
+		this.player = player;
 		setFocusable(true);
-		player = new Player((int) playerXY.getX(), (int) playerXY.getY());	// get form server
 		addKeyListener(new KeyAdapt(player));
 		
 		mainTimer = new Timer(5, this);
@@ -35,9 +36,12 @@ public class GameFrame extends JPanel implements ActionListener{
 		Graphics2D g2d = (Graphics2D) g;
 		
 		ImageIcon ic = new ImageIcon("bg.png");
-		g2d.drawImage(ic.getImage(), 0, 0, null);
 		
+		g2d.drawImage(ic.getImage(), 0, 0, null);
+		g2d.setColor(Color.WHITE);
+		g2d.drawString(player.username,(player.x)+15, (player.y)+68);
 		player.draw(g2d);
+
 		
 		for(int i=0; i<asteroids.size(); i++){
 		
