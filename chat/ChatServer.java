@@ -2,18 +2,21 @@ import java.io.*;
 import java.net.*;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
+import java.util.ArrayList;
 
 public class ChatServer{
 	
     static Vector ClientSockets;
     static Vector LoginNames;
+	static Vector logs;
 
+	
     ChatServer() throws IOException{
 		
         ServerSocket server = new ServerSocket(9001);
         ClientSockets = new Vector();
         LoginNames = new Vector();
+		logs = new Vector();
 		
 		System.out.println("Chat Server is now running...");
 		
@@ -36,6 +39,7 @@ public class ChatServer{
         Socket ClientSocket;
         DataInputStream din;
         DataOutputStream dout;
+		
 
         AcceptClient(Socket client) throws IOException{
 			
@@ -63,6 +67,7 @@ public class ChatServer{
                     String MsgType = st.nextToken(); // gets the message type (LOGIN, LOGOUT, DATA)
                     int lo = -1;
                     String msg = "";
+					String temp = "";
 
                     while(st.hasMoreTokens()){
 						
@@ -72,6 +77,28 @@ public class ChatServer{
 					
                     if(MsgType.equals("LOGIN")){ // Message Type = LOGIN
 						
+						for(int i = 0; i < LoginNames.size(); i++){
+						
+							Object obj = LoginNames.elementAt(i);
+							String m = obj.toString();
+							String n = LoginName.toString();
+
+							if(m.matches(LoginName)){
+
+								Socket pSocket = (Socket) ClientSockets.elementAt(i);
+								DataOutputStream pOut = new DataOutputStream(pSocket.getOutputStream());
+								
+								for(int j = 0; j < logs.size(); j++){
+									Object log = logs.get(j);
+									String tempLog = log.toString();
+									pOut.writeUTF(tempLog);
+									System.out.println(tempLog);
+								}
+								
+							}
+							
+                        }
+						
                         for(int i = 0; i < LoginNames.size(); i++){
 							
                             Socket pSocket = (Socket) ClientSockets.elementAt(i);
@@ -79,6 +106,9 @@ public class ChatServer{
                             pOut.writeUTF(LoginName + " has connected.");
 							
                         }
+						
+						temp = LoginName + " has connected";
+						logs.add(temp);
 						
 						System.out.println("Client "+ LoginName + " has connected to the server.");
 						
@@ -95,6 +125,8 @@ public class ChatServer{
 							
                         }
 						
+						temp = LoginName + " has disconnected";
+						logs.add(temp);
 						System.out.println("Client "+LoginName + " has disconnected from the server.");
 						
                         if(lo >= 0){
@@ -111,8 +143,11 @@ public class ChatServer{
                             pOut.writeUTF(LoginName + ": " + msg);
                         }
 						
+						temp = LoginName + ": " + msg;
+						logs.add(temp);
 						System.out.println("Client "+LoginName + ": "+ msg);
                     }
+					
 					
                     if(MsgType.equals("LOGOUT")) // client with Message Type LOGOUT is stopped by the server
                         break;
