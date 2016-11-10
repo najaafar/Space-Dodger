@@ -43,7 +43,7 @@ public class Player extends Entity{
 
 	public Image getPlayerImg(){
 
-		ImageIcon ic = new ImageIcon("player.png");
+		ImageIcon ic = new ImageIcon("Player.png");
 		return ic.getImage();
 
 	}

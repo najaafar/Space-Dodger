@@ -13,7 +13,7 @@ public class Main{
 	private static String username;
 
 	public static void main(String args[]) throws IOException{
-		host = "192.168.1.40";
+		host = "127.0.0.1";
 		address = InetAddress.getByName(host);
 
 		x = 400;
