@@ -46,6 +46,7 @@ public class GameServer {
 				packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 				socket.send(packet);
 
+				// game start
 				message = ("g").getBytes();
 				packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 				socket.send(packet);
@@ -53,10 +54,19 @@ public class GameServer {
 			}
 		}
 		while(true){
+			// receive packet with current coordinates
+				message = new byte[256];
+				packet = new DatagramPacket(message, message.length);
+				socket.receive(packet);
+				String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
+				System.out.println(new String(packet.getData(), 0, packet.getLength()));
+			//	p.coordinates = new Point(Integer.parseInt(opponent[0]), Integer.parseInt(opponent[1]));
+
+
 			for(PlayerAddress p : clientAddresses){
 				for(PlayerAddress q : clientAddresses){
 					message = new byte[256];
-					message = (q.getUsername() + "," + (int) (q.coordinates.getX()) + "," + (int) (q.coordinates.getY())).getBytes();
+					message = (((int) (q.coordinates.getX())) + "," + ((int) (q.coordinates.getY())) + "," + q.getUsername()).getBytes();
 					packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 					socket.send(packet);
 				}
@@ -80,7 +90,12 @@ public class GameServer {
 
 			System.out.println(player + " has joined.");
 
-			if(clientAddresses.size() == 3) break; // add time constraint
+			if(clientAddresses.size() >= 3){
+				System.out.println("3 or more players have joined. Start the game? [Y/N]");
+				BufferedReader IN = new BufferedReader(new InputStreamReader(System.in));
+				char choice = IN.readLine().charAt(0);
+				if(choice == 'Y' || choice == 'y') break;
+			}
 		}
 	}
 }

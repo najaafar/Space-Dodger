@@ -11,23 +11,27 @@ public class Main{
 	private static String host;
 	private static InetAddress address;
 	private static String username;
+	private static Player player;
+	private static GameFrame game;
 
 	public static void main(String args[]) throws IOException{
-		host = "192.168.1.40";
+		host = "127.0.0.1";
 		address = InetAddress.getByName(host);
 
 		x = 400;
 		y = 200;
-		username = "player 1";
+		username = "player1";
 		socket = new DatagramSocket();
 	
 		connectToServer();
 		
 		if(startGame()){
+			player = new Player((int) x, (int) y, username);
+			game = new GameFrame(player);
 			JFrame frame = new JFrame("Space Dodger");
 			frame.setSize(500, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.add(new GameFrame(new Player((int) x, (int) y, username)));	// get from server
+			frame.add(game);	// get from server
 			frame.setResizable(false);
 			frame.setVisible(true);
 		}
@@ -35,24 +39,39 @@ public class Main{
 		socket.close();
 	}
 
+
+
 	private static void updatePlayers() throws IOException {
+		byte[] message;
+		DatagramPacket packet;
 		while(true){
-			byte message[] = new byte[256];
-			DatagramPacket packet = new DatagramPacket(message, message.length);
+			// send packet with player's current x, y
+		
+			System.out.println(game.getPlayerPositionX()+ "," + game.getPlayerPositionX() + "," + game.getPlayerUsername()); // coords do not update??
+
+			message = new byte[256];
+			message = (player.x + "," + player.y + "," + player.username).getBytes();
+			packet = new DatagramPacket(message, message.length, address, 9000);
+			socket.send(packet);
+		
+			// receive packet with opponents' current coordinates
+			message = new byte[256];
+			packet = new DatagramPacket(message, message.length);
 			socket.receive(packet);
 			String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
-			String opponent_name = opponent[0];
-/*
-			int o_x = Integer.parseInt(opponent[1]);
-			int o_y = Integer.parseInt(opponent[2]);
+			int o_x = Integer.parseInt(opponent[0]);
+			int o_y = Integer.parseInt(opponent[1]);
+			String opponent_name = (opponent[2]).trim();
+
 
 			if(!opponent_name.equals(username)){
 				Player opp = new Player(o_x, o_y, opponent_name);
-				System.out.println("opponent: " + opponent_name + "(" + o_x + "," + o_y + ")");
+				System.out.println("Opponent: " + opponent_name + " at (" + o_x + "," + o_y + ")");
 				// draw
+				game.paint()
 			}
-*/
+
 		}
 	}
 
