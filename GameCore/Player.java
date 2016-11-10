@@ -43,7 +43,7 @@ public class Player extends Entity{
 
 	public Image getPlayerImg(){
 
-		ImageIcon ic = new ImageIcon("player.png");
+		ImageIcon ic = new ImageIcon("Player.png");
 		return ic.getImage();
 
 	}
@@ -112,11 +112,12 @@ public class Player extends Entity{
 			Asteroid tempAsteroid = asteroids.get(i);
 
 			if(getBounds().intersects(tempAsteroid.getBounds())){
-
+ 
 				JOptionPane.showMessageDialog(null, "You died!");
 				System.exit(0);
 
 			}
+
 
 		}
 

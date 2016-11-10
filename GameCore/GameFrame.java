@@ -147,7 +147,8 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		return projectiles;
 
-	}
+	} 
+
 
 	public void startGame(){// starts the game
 

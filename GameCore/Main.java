@@ -13,7 +13,7 @@ public class Main{
 	private static String username;
 
 	public static void main(String args[]) throws IOException{
-		host = "192.168.1.40";
+		host = "127.0.0.1";
 		address = InetAddress.getByName(host);
 
 		x = 400;
@@ -67,14 +67,14 @@ public class Main{
 		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);	
 		socket.send(packet);
 
-		message = new byte[256];
+		/*message = new byte[256];
 		packet = new DatagramPacket(message, message.length);
 		socket.receive(packet);
 		String[] coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 		x = Integer.parseInt(coordinates[0]);
 		y = Integer.parseInt(coordinates[1]);
-		System.out.println(x + ", " + y);
+		System.out.println(x + ", " + y);*/
 	}
 
 	private static Boolean startGame() throws IOException{
