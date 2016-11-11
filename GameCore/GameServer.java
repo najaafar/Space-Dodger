@@ -7,20 +7,69 @@ import java.util.concurrent.TimeUnit;
 
 public class GameServer {
 
+	static private GameServer gs;
     static private ArrayList<PlayerAddress> clientAddresses;
 	static private DatagramSocket socket;
 	static private ArrayList<Point> points;
-	static private ArrayList<Point> asteroids;
 	static private int asteroidCount = 2;
 
+	public final Runnable sendAsteroid;	// has delay of 2 seconds
+//	public final Runnable receiveInfo;
+//	public final Runnable sendInfo;
+
+	public GameServer(){
+		sendAsteroid = new Runnable(){
+			public void run(){
+				byte message[] = new byte[256];
+				DatagramPacket packet = null;
+
+				while(true){
+					
+					try{
+					TimeUnit.SECONDS.sleep(3L);
+					// send packet with asteroid coordinates every 2 seconds
+					} catch(InterruptedException e){}
+
+					try {
+		    			ArrayList<Point> asteroids = new ArrayList<>();
+		    			asteroids = generateRandomPoints(asteroidCount);
+
+		    			for(Point asteroid : asteroids){
+							message = new byte[256];
+							message = ((int)(asteroid.getX()) + "," + (int)(asteroid.getY()) + ",asteroid").getBytes();
+							for(PlayerAddress p : clientAddresses){
+								packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+								socket.send(packet);
+								System.out.println("Sent asteroid coordinates of " + asteroid.getX() + ", " + asteroid.getY() + " to " + p.getUsername());
+							}
+						}
+					} catch(IOException ex) {}
+				}
+			}
+		};
+/*
+		receiveInfo = new Runnable(){
+			public void run(){
+
+			}
+		};
+		sendInfo = new Runnable(){
+			public void run(){
+
+			}
+		};
+*/
+	}
+
 	public static void main(String args[]) throws IOException {
+		gs = new GameServer();
 		socket = new DatagramSocket(9000);
 		clientAddresses = new ArrayList<PlayerAddress>();
 
-        waitForPlayers();
-        points = generateRandomPoints(clientAddresses.size());
-        asteroids = generateRandomPoints(asteroidCount);
+        waitForPlayers();	// complete 3 or more players
+        points = generateRandomPoints(clientAddresses.size());	// randomly generate initial coordinates of players
         startGame();
+        updateGame();
 	}
 
 	private static ArrayList<Point> generateRandomPoints(int size){
@@ -45,11 +94,13 @@ public class GameServer {
 		DatagramPacket packet = null;
 		int i = 0;
 
+		// send message to all players that the game will start
 		if(clientAddresses != null){
 			for(PlayerAddress p : clientAddresses){
 				Point rand = points.get(i++);
-				p.coordinates = rand;
-				message = ((int)(rand.getX()) + "," + (int)(rand.getY())).getBytes();
+				System.out.println(rand + "");
+				p.changeCoords((int)(rand.getX()), (int)(rand.getY()));
+				message = ((int)(p.getCoords().getX()) + "," + (int)(p.getCoords().getY())).getBytes();
 				packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 				socket.send(packet);
 
@@ -58,44 +109,47 @@ public class GameServer {
 				packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 				socket.send(packet);
 				System.out.println(p.getUsername() + " has entered the game.");
-
-
 			}
 		}
-		while(true){
-			try {
-    			TimeUnit.SECONDS.sleep(3L);
+	}
 
-    			for(Point asteroid : asteroids){
-					message = new byte[256];
-					message = ((int)(asteroid.getX()) + "," + (int)(asteroid.getY())).getBytes();
-					for(PlayerAddress p : clientAddresses){
+
+	private static void updateGame() throws IOException{
+		byte message[] = new byte[256];
+		DatagramPacket packet = null;
+
+		// send asteroid coordinates every 3 seconds
+		new Thread(gs.sendAsteroid).start();
+
+		while(true){
+			
+			// broadcast players' coordinates
+			for(PlayerAddress p : clientAddresses){
+				for(PlayerAddress q : clientAddresses){
+					if(!p.getUsername().equals(q.getUsername())){
+						message = new byte[256];
+						message = ("opponent," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
 						packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
-					socket.send(packet);
+						socket.send(packet);
 					}
 				}
-			} catch(InterruptedException ex) {
 			}
 
-
-			// receive packet with current coordinates
+			// receive a message
 				message = new byte[256];
 				packet = new DatagramPacket(message, message.length);
 				socket.receive(packet);
-				String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
-				System.out.println(new String(packet.getData(), 0, packet.getLength()));
-			//	p.coordinates = new Point(Integer.parseInt(opponent[0]), Integer.parseInt(opponent[1]));
+				String from_player = new String(packet.getData(), 0, packet.getLength());
 
-
-			for(PlayerAddress p : clientAddresses){
-				for(PlayerAddress q : clientAddresses){
-					message = new byte[256];
-					message = (((int) (q.coordinates.getX())) + "," + ((int) (q.coordinates.getY())) + "," + q.getUsername()).getBytes();
-					packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
-					socket.send(packet);
+			// if message contained coordinates of a player
+				if(from_player.contains("coords")){
+					String[] coords = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					for(PlayerAddress q : clientAddresses){
+						if((q.getUsername().trim()).equals((coords[2]).trim())){
+							q.changeCoords(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+						}
+					}
 				}
-			}
-			// update coordinates
 		}
 	}
 

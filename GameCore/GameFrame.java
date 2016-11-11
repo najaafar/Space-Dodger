@@ -31,7 +31,6 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		mainTimer = new Timer(5, this);
 		mainTimer.start();
-		startGame();
 	}
 
 	public void paint(Graphics g){// draw background, player, asteroids
@@ -64,15 +63,10 @@ public class GameFrame extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 
 		player.update();
-	//	System.out.println(player.x + ";" + player.y + ";" + player.username);
 
 		if(syncCounter>50&& getPlayerShoot()==true){
 			syncCounter = 0;
 			addProjectile(new Projectile_Blaster(getPlayerPositionX(), getPlayerPositionY()));
-		}
-
-		if(asteroids.size()<asteroidCount){
-		//	addAsteroid(new Asteroid(rand.nextInt(500), rand.nextInt(500)-700));
 		}
 
 		for(int i=0; i<asteroids.size(); i++){
@@ -151,16 +145,6 @@ public class GameFrame extends JPanel implements ActionListener{
 	public static ArrayList<Projectile_Blaster> getProjectileList(){// gets list of asteroids
 
 		return projectiles;
-
-	}
-
-	public void startGame(){// starts the game
-
-		for(int i=0; i< asteroidCount; i++){
-
-		//	addAsteroid(new Asteroid(rand.nextInt(500), rand.nextInt(500)-700));
-
-		}
 
 	}
 

@@ -17,26 +17,37 @@ public class Main{
 	public static void main(String args[]) throws IOException{
 		host = "127.0.0.1";
 		address = InetAddress.getByName(host);
+		socket = new DatagramSocket();
 
+		// default values
 		x = 400;
 		y = 200;
 		username = "player1";
-		socket = new DatagramSocket();
 	
-		connectToServer();
+		if(args.length < 1){
+			System.out.println("Usage: java Main username");
+			System.exit(1);
+		}
+
+		username = args[0];
+
+		connectToServer(username);		// attempt to connect to host
 		
-		if(startGame()){
+		if(startGame()){	// if host has sent message to start the game
+			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
 			JFrame frame = new JFrame("Space Dodger");
+
 			frame.setSize(500, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.add(game);	// get from server
 			frame.setResizable(false);
 			frame.setVisible(true);
 		}
-		updatePlayers();
-		socket.close();
+		updatePlayers();	// update server about current position of player and
+							// get information about opponents and asteroids
+		socket.close();		// game finish
 	}
 
 
@@ -45,72 +56,71 @@ public class Main{
 		byte[] message;
 		DatagramPacket packet;
 		while(true){
-			// send packet with player's current x, y
-		
-			// System.out.println(player.x+ "," + player.y + "," + player.username);
-
+			// send packet with player's current coordinates
 			message = new byte[256];
-			message = (player.x + "," + player.y + "," + player.username).getBytes();
+			message = (player.x + "," + player.y + "," + player.username + ",coords").getBytes();
 			packet = new DatagramPacket(message, message.length, address, 9000);
 			socket.send(packet);
-		/*
-			// receive packet with opponents' current coordinates
+		
+			
+			// receive a packet from the server
 			message = new byte[256];
 			packet = new DatagramPacket(message, message.length);
 			socket.receive(packet);
-			String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
+			String from_server = new String(packet.getData(), 0, packet.getLength());
 
-			int o_x = Integer.parseInt(opponent[0]);
-			int o_y = Integer.parseInt(opponent[1]);
-			String opponent_name = (opponent[2]).trim();
+			// if packet contains opponent coordinates
+			if(from_server.contains("opponent")){
+				try{
+					String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					int o_x = Integer.parseInt(opponent[1]);
+					int o_y = Integer.parseInt(opponent[2]);
+					String opponent_name = (opponent[3]).trim();
 
-			if(!opponent_name.equals(username)){
-				Player opp = new Player(o_x, o_y, opponent_name);
-			//	System.out.println("Opponent: " + opponent_name + " at (" + o_x + "," + o_y + ")");
-				// draw
-				// game.paint()
+					Player opp = new Player(o_x, o_y, opponent_name);
+					// uncomment next line to view opponent's coordinates
+					// System.out.println("Received opponent coordinates at " + opponent_name + " at (" + o_x + "," + o_y + ")");
+					// TODO: draw opponent
+				}catch(Exception e){}
 			}
-	*/
-			if(game.asteroids.size() < game.asteroidCount){
-				System.out.println("Asteroids: ");
-				for(int i = 0; i < 2; i++){
+
+			// if packet contains asteroid coordinates
+			else if(from_server.contains("asteroid")){
+				// TODO: minsan hindi nakukuha yung message kahit na-broadcast
 					try{
-						message = new byte[256];
-						packet = new DatagramPacket(message, message.length);
-						socket.receive(packet);
 						String[] ast_coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 						int ax = Integer.parseInt(ast_coordinates[0]);
 						int ay = Integer.parseInt(ast_coordinates[1]);
-
-						System.out.println(ax + ", " + ay);
+						
+						System.out.println("Received asteroid coordinates of " + ax + ", " + ay);
 						game.addAsteroid(new Asteroid(ax+100, ay-700));
 					}catch(Exception e){}
-				}
 			}
+
+			// TODO: receive packet with time left and ranking
+			
 		}
 	}
 
-	private static void connectToServer() throws IOException {
+	private static void connectToServer(String username) throws IOException {
 		byte message[] = new byte[256];
-		System.out.println("Username: ");
-
-		BufferedReader IN = new BufferedReader(new InputStreamReader(System.in));
-		username = IN.readLine();
 		message = username.getBytes();
-	
 		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);	
 		socket.send(packet);
 
 		try{
 			message = new byte[256];
-		packet = new DatagramPacket(message, message.length);
-		socket.receive(packet);
-		String[] coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
+			packet = new DatagramPacket(message, message.length);
+			socket.receive(packet);
+			String[] coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
-		x = Integer.parseInt(coordinates[0]);
-		y = Integer.parseInt(coordinates[1]);
-		System.out.println(x + ", " + y);
+			x = Integer.parseInt(coordinates[0]);
+			y = Integer.parseInt(coordinates[1]);
+			
+			player.x = x;
+			player.y = y;
+
 		}catch(Exception e){}
 	}
 

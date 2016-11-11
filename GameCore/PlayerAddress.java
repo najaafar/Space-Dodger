@@ -6,12 +6,14 @@ public class PlayerAddress{
 	private String username;
 	private int port;
 	private double time; // "score"
-	public Point coordinates;
+	private Point coordinates;
 
 	public PlayerAddress(InetAddress a, String u, int p){
 		this.address = a;
 		this.username = u;
 		this.port = p;
+		this.time = 0.0;
+		this.coordinates = new Point(0, 0);
 	}
 
 	public InetAddress getAddress(){
@@ -24,5 +26,13 @@ public class PlayerAddress{
 
 	public int getPort(){
 		return this.port;
+	}
+
+	public Point getCoords(){
+		return coordinates.getLocation();
+	}
+
+	public void changeCoords(int x, int y){
+		coordinates.setLocation(x, y);
 	}
 }
