@@ -2,23 +2,28 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.awt.Point;
+import java.util.concurrent.TimeUnit;
+
 
 public class GameServer {
 
     static private ArrayList<PlayerAddress> clientAddresses;
 	static private DatagramSocket socket;
 	static private ArrayList<Point> points;
+	static private ArrayList<Point> asteroids;
+	static private int asteroidCount = 2;
 
 	public static void main(String args[]) throws IOException {
 		socket = new DatagramSocket(9000);
 		clientAddresses = new ArrayList<PlayerAddress>();
 
         waitForPlayers();
-        generateRandomPoints(clientAddresses.size());
+        points = generateRandomPoints(clientAddresses.size());
+        asteroids = generateRandomPoints(asteroidCount);
         startGame();
 	}
 
-	private static void generateRandomPoints(int size){
+	private static ArrayList<Point> generateRandomPoints(int size){
 		Set<Point> set = new HashSet<Point>();
 		Random position = new Random();
 		Point test;
@@ -31,13 +36,15 @@ public class GameServer {
 		}
 		while (set.size()<size);
 
-		points = new ArrayList<Point>(set);
+		return (new ArrayList<Point>(set));
+
 	}
 
 	private static void startGame() throws IOException{
 		byte message[] = new byte[256];
 		DatagramPacket packet = null;
 		int i = 0;
+
 		if(clientAddresses != null){
 			for(PlayerAddress p : clientAddresses){
 				Point rand = points.get(i++);
@@ -51,9 +58,26 @@ public class GameServer {
 				packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 				socket.send(packet);
 				System.out.println(p.getUsername() + " has entered the game.");
+
+
 			}
 		}
 		while(true){
+			try {
+    			TimeUnit.SECONDS.sleep(3L);
+
+    			for(Point asteroid : asteroids){
+					message = new byte[256];
+					message = ((int)(asteroid.getX()) + "," + (int)(asteroid.getY())).getBytes();
+					for(PlayerAddress p : clientAddresses){
+						packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+					socket.send(packet);
+					}
+				}
+			} catch(InterruptedException ex) {
+			}
+
+
 			// receive packet with current coordinates
 				message = new byte[256];
 				packet = new DatagramPacket(message, message.length);

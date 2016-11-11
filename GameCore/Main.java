@@ -47,13 +47,13 @@ public class Main{
 		while(true){
 			// send packet with player's current x, y
 		
-			System.out.println(game.getPlayerPositionX()+ "," + game.getPlayerPositionX() + "," + game.getPlayerUsername()); // coords do not update??
+			// System.out.println(player.x+ "," + player.y + "," + player.username);
 
 			message = new byte[256];
 			message = (player.x + "," + player.y + "," + player.username).getBytes();
 			packet = new DatagramPacket(message, message.length, address, 9000);
 			socket.send(packet);
-		
+		/*
 			// receive packet with opponents' current coordinates
 			message = new byte[256];
 			packet = new DatagramPacket(message, message.length);
@@ -64,14 +64,30 @@ public class Main{
 			int o_y = Integer.parseInt(opponent[1]);
 			String opponent_name = (opponent[2]).trim();
 
-
 			if(!opponent_name.equals(username)){
 				Player opp = new Player(o_x, o_y, opponent_name);
-				System.out.println("Opponent: " + opponent_name + " at (" + o_x + "," + o_y + ")");
+			//	System.out.println("Opponent: " + opponent_name + " at (" + o_x + "," + o_y + ")");
 				// draw
-				game.paint()
+				// game.paint()
 			}
+	*/
+			if(game.asteroids.size() < game.asteroidCount){
+				System.out.println("Asteroids: ");
+				for(int i = 0; i < 2; i++){
+					try{
+						message = new byte[256];
+						packet = new DatagramPacket(message, message.length);
+						socket.receive(packet);
+						String[] ast_coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
+						int ax = Integer.parseInt(ast_coordinates[0]);
+						int ay = Integer.parseInt(ast_coordinates[1]);
+
+						System.out.println(ax + ", " + ay);
+						game.addAsteroid(new Asteroid(ax+100, ay-700));
+					}catch(Exception e){}
+				}
+			}
 		}
 	}
 
@@ -86,7 +102,8 @@ public class Main{
 		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);	
 		socket.send(packet);
 
-		message = new byte[256];
+		try{
+			message = new byte[256];
 		packet = new DatagramPacket(message, message.length);
 		socket.receive(packet);
 		String[] coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -94,6 +111,7 @@ public class Main{
 		x = Integer.parseInt(coordinates[0]);
 		y = Integer.parseInt(coordinates[1]);
 		System.out.println(x + ", " + y);
+		}catch(Exception e){}
 	}
 
 	private static Boolean startGame() throws IOException{

@@ -18,7 +18,7 @@ public class GameFrame extends JPanel implements ActionListener{
 	static ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
 	static ArrayList<Projectile_Blaster> projectiles = new ArrayList<Projectile_Blaster>();
 
-	int asteroidCount = 2;
+	public int asteroidCount = 2;
 	int syncCounter = 0;
 	public static int level = 1;
 	
@@ -64,7 +64,7 @@ public class GameFrame extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 
 		player.update();
-		System.out.println(player.x + ";" + player.y + ";" + player.username);
+	//	System.out.println(player.x + ";" + player.y + ";" + player.username);
 
 		if(syncCounter>50&& getPlayerShoot()==true){
 			syncCounter = 0;
@@ -72,7 +72,7 @@ public class GameFrame extends JPanel implements ActionListener{
 		}
 
 		if(asteroids.size()<asteroidCount){
-			addAsteroid(new Asteroid(rand.nextInt(500), rand.nextInt(500)-700));
+		//	addAsteroid(new Asteroid(rand.nextInt(500), rand.nextInt(500)-700));
 		}
 
 		for(int i=0; i<asteroids.size(); i++){
@@ -113,7 +113,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 	public static void addAsteroid(Asteroid a){// adds asteroids
 
-	//	asteroids.add(a);
+		asteroids.add(a);
 
 	}
 
@@ -158,7 +158,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		for(int i=0; i< asteroidCount; i++){
 
-			addAsteroid(new Asteroid(rand.nextInt(500), rand.nextInt(500)-700));
+		//	addAsteroid(new Asteroid(rand.nextInt(500), rand.nextInt(500)-700));
 
 		}
 
