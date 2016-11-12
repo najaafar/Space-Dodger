@@ -34,7 +34,7 @@ public class Player extends Entity{
 		x += velX;
 
 	// comment next line if testing
-	//	checkCollisions();	// checks if player is hit by asteroid
+		checkCollisions();	// checks if player is hit by asteroid
 
 	}
 
@@ -112,6 +112,11 @@ public class Player extends Entity{
 			if(getBounds().intersects(tempAsteroid.getBounds())){
 
 				JOptionPane.showMessageDialog(null, "You died!");
+
+				/*
+					remove this player as opponent of other players
+				*/
+					
 				System.exit(0);
 
 			}

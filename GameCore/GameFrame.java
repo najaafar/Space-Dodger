@@ -43,9 +43,9 @@ public class GameFrame extends JPanel implements ActionListener{
 		g2d.drawImage(ic.getImage(), 0, 0, null);
 
 		player.draw(g2d);
-
-		for(Asteroid tempAsteroid : asteroids){
-				tempAsteroid.draw(g2d);
+		for(int i=0; i<asteroids.size(); i++){
+			Asteroid tempAsteroid = asteroids.get(i);
+			tempAsteroid.draw(g2d);
 		}
 
 		for(Opponent o : opponents){
@@ -67,8 +67,7 @@ public class GameFrame extends JPanel implements ActionListener{
 			addProjectile(new Projectile_Blaster(getPlayerPositionX(), getPlayerPositionY()));
 		}
 
-		for(int i=0; i<asteroids.size(); i++){
-
+		for(int i=0; i<asteroids.size(); i++){ 
 			Asteroid tempAsteroid = asteroids.get(i);
 
 			if(tempAsteroid.checkCollisions()==true){

@@ -6,12 +6,12 @@ import java.awt.Rectangle;
 
 public class Opponent extends Entity{
 	private String username;
-	private Image playerImg;
+	private Image playerImg; 
 
 	public Opponent(int x, int y, String username){
 		super(x, y);
 		this.username = username;
-		playerImg = (new ImageIcon("player.png")).getImage();
+		playerImg = (new ImageIcon("player.png")).getImage(); 
 	}	
 
 	public void updateCoords(int x, int y){

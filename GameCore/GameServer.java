@@ -12,6 +12,7 @@ public class GameServer {
 	static private DatagramSocket socket;
 	static private ArrayList<Point> points;
 	static private int asteroidCount = 2;
+	static private int numOfPlayers = 0;
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 //	public final Runnable receiveInfo;
@@ -170,10 +171,12 @@ public class GameServer {
 			String player = new String(packet.getData());
 			clientAddresses.add(new PlayerAddress(player_address, player, port));
 
+			numOfPlayers = numOfPlayers + 1;
+
 			System.out.println(player + " has joined.");
 
 			if(clientAddresses.size() >= 2){
-				System.out.println("2 or more players have joined. Start the game? [Y/N]");
+				System.out.println(numOfPlayers + " players have joined. Start the game? [Y/N]");
 				BufferedReader IN = new BufferedReader(new InputStreamReader(System.in));
 				char choice = IN.readLine().charAt(0);
 				if(choice == 'Y' || choice == 'y') break;

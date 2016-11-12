@@ -50,21 +50,21 @@ public class Asteroid extends Entity{
 
 	public boolean checkCollisions(){
 
-    ArrayList<Projectile_Blaster> projectiles = GameFrame.getProjectileList();
+	    ArrayList<Projectile_Blaster> projectiles = GameFrame.getProjectileList();
 
-    for(int i=0; i<projectiles.size(); i++){
+	    for(int i=0; i<projectiles.size(); i++){
 
 			Projectile_Blaster tempProjectile = projectiles.get(i);
 
 			if(getBounds().intersects(tempProjectile.getBounds())){
 
-        return true;
+	        	return true;
 
 			}
 
 		}
 		return false;
-  }
+	}
 
 	public Rectangle getBounds(){// gets image boundary (to be used for collision detection)
 
