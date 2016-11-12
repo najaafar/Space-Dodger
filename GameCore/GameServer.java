@@ -9,6 +9,7 @@ public class GameServer {
 
 	static private GameServer gs;
     static private ArrayList<PlayerAddress> clientAddresses;
+	static private ArrayList<Point> asteroids = new ArrayList<>();
 	static private DatagramSocket socket;
 	static private ArrayList<Point> points;
 	static private int asteroidCount = 2;
@@ -32,7 +33,7 @@ public class GameServer {
 
 					try {
 
-		    			ArrayList<Point> asteroids = new ArrayList<>();
+						asteroids.clear();
 		    			asteroids = generateRandomPoints(asteroidCount);
 
 		    			for(Point asteroid : asteroids){
