@@ -2,7 +2,6 @@ import java.io.*;
 import java.net.*;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.ArrayList;
 
 public class ChatServer{
 	
