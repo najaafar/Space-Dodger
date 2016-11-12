@@ -2,6 +2,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import java.awt.Rectangle;
 
 public class Opponent extends Entity{
 	private String username;
@@ -26,5 +27,9 @@ public class Opponent extends Entity{
 
 	public String getUsername(){
 		return this.username;
+	} 
+
+	public Rectangle getBounds(){// gets image boundary (to be used for collision detection) 
+		return new Rectangle(x, y, playerImg.getWidth(null), playerImg.getHeight(null)); 
 	}
 }
