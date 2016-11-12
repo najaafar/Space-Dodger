@@ -80,14 +80,16 @@ public class Main{
 					String opponent_name = (opponent[3]).trim();
 					
 					Boolean opponent_exists = false;
-					for(Opponent o : game.opponents){
+					for(Opponent o : game.opponents){	// update opponent
 						if(((o.getUsername()).trim()).equals(opponent_name)){
 
 							o.updateCoords(o_x, o_y);
 							opponent_exists = true;
 						}
 					}
-					if(!opponent_exists) game.opponents.add(new Opponent(o_x, o_y, opponent_name));
+					if(!opponent_exists)				// add opponent
+						game.opponents.add(new Opponent(o_x, o_y, opponent_name));
+
 					game.repaint();
 				}catch(Exception e){}
 			}

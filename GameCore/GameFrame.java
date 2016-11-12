@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.ArrayList;
 import javax.swing.*;
+import java.awt.Image;
+
 
 public class GameFrame extends JPanel implements ActionListener{
 
@@ -21,6 +23,8 @@ public class GameFrame extends JPanel implements ActionListener{
 	public int asteroidCount = 2;
 	int syncCounter = 0;
 	public static int level = 1;
+
+	Image bg;
 	
 	public GameFrame(Player player){
 	
@@ -31,6 +35,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		mainTimer = new Timer(5, this);
 		mainTimer.start();
+		bg = (new ImageIcon("bg.png")).getImage();
 	}
 
 	public void paint(Graphics g){// draw background, player, asteroids
@@ -38,10 +43,7 @@ public class GameFrame extends JPanel implements ActionListener{
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 
-		ImageIcon ic = new ImageIcon("bg.png");
-		
-		g2d.drawImage(ic.getImage(), 0, 0, null);
-
+		g2d.drawImage(bg, 0, 0, null);
 		player.draw(g2d);
 		for(int i=0; i<asteroids.size(); i++){
 			Asteroid tempAsteroid = asteroids.get(i);
