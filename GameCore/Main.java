@@ -3,6 +3,8 @@ import java.io.*;
 import java.net.*;
 import java.awt.Point;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+
 
 public class Main{
 
@@ -76,11 +78,17 @@ public class Main{
 					int o_x = Integer.parseInt(opponent[1]);
 					int o_y = Integer.parseInt(opponent[2]);
 					String opponent_name = (opponent[3]).trim();
+					
+					Boolean opponent_exists = false;
+					for(Opponent o : game.opponents){
+						if(((o.getUsername()).trim()).equals(opponent_name)){
 
-					Player opp = new Player(o_x, o_y, opponent_name);
-					// uncomment next line to view opponent's coordinates
-					// System.out.println("Received opponent coordinates at " + opponent_name + " at (" + o_x + "," + o_y + ")");
-					// TODO: draw opponent
+							o.updateCoords(o_x, o_y);
+							opponent_exists = true;
+						}
+					}
+					if(!opponent_exists) game.opponents.add(new Opponent(o_x, o_y, opponent_name));
+					game.repaint();
 				}catch(Exception e){}
 			}
 

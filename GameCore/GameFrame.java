@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.Point;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -17,6 +16,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 	static ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
 	static ArrayList<Projectile_Blaster> projectiles = new ArrayList<Projectile_Blaster>();
+	static ArrayList<Opponent> opponents = new ArrayList<Opponent>();
 
 	public int asteroidCount = 2;
 	int syncCounter = 0;
@@ -41,21 +41,19 @@ public class GameFrame extends JPanel implements ActionListener{
 		ImageIcon ic = new ImageIcon("bg.png");
 		
 		g2d.drawImage(ic.getImage(), 0, 0, null);
-		g2d.setColor(Color.WHITE);
-		g2d.drawString(player.username,(player.x)+15, (player.y)+68);
+
 		player.draw(g2d);
 
-		for(int i=0; i<asteroids.size(); i++){
-
-				Asteroid tempAsteroid = asteroids.get(i);
+		for(Asteroid tempAsteroid : asteroids){
 				tempAsteroid.draw(g2d);
-
 		}
 
-		for(int i=0; i<projectiles.size(); i++){
+		for(Opponent o : opponents){
+			o.draw(g2d);
+		}
 
-				Projectile_Blaster tempProjectile = projectiles.get(i);
-				tempProjectile.draw(g2d);
+		for(Projectile_Blaster tempProjectile : projectiles){
+			tempProjectile.draw(g2d);
  		}
 
 	}
@@ -106,9 +104,8 @@ public class GameFrame extends JPanel implements ActionListener{
 	}
 
 	public static void addAsteroid(Asteroid a){// adds asteroids
-
-		asteroids.add(a);
-
+		if(asteroids.size() <= 2)
+			asteroids.add(a);
 	}
 
 	public static void addProjectile(Projectile_Blaster a){// adds asteroids

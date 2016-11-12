@@ -31,10 +31,14 @@ public class GameServer {
 					} catch(InterruptedException e){}
 
 					try {
+
 		    			ArrayList<Point> asteroids = new ArrayList<>();
 		    			asteroids = generateRandomPoints(asteroidCount);
 
 		    			for(Point asteroid : asteroids){
+		    				try{
+								TimeUnit.SECONDS.sleep(1L);
+							} catch(InterruptedException e){}
 							message = new byte[256];
 							message = ((int)(asteroid.getX()) + "," + (int)(asteroid.getY()) + ",asteroid").getBytes();
 							for(PlayerAddress p : clientAddresses){
@@ -168,8 +172,8 @@ public class GameServer {
 
 			System.out.println(player + " has joined.");
 
-			if(clientAddresses.size() >= 3){
-				System.out.println("3 or more players have joined. Start the game? [Y/N]");
+			if(clientAddresses.size() >= 2){
+				System.out.println("2 or more players have joined. Start the game? [Y/N]");
 				BufferedReader IN = new BufferedReader(new InputStreamReader(System.in));
 				char choice = IN.readLine().charAt(0);
 				if(choice == 'Y' || choice == 'y') break;

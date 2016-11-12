@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import java.awt.Color;
+
 
 public class Player extends Entity{
 
@@ -12,6 +14,7 @@ public class Player extends Entity{
 	int speed = 2;
 	String username;
 	boolean shoot_yes = false;
+	private Image playerImg;
 
 	/*  after n collisions, player dies
 		int life = 3;
@@ -21,6 +24,7 @@ public class Player extends Entity{
 	
 		super(x, y);
 		this.username = username;
+		playerImg = (new ImageIcon("player.png")).getImage();
 	
 	}
 
@@ -30,20 +34,15 @@ public class Player extends Entity{
 		x += velX;
 
 	// comment next line if testing
-		checkCollisions();	// checks if player is hit by asteroid
+	//	checkCollisions();	// checks if player is hit by asteroid
 
 	}
 
 	public void draw(Graphics2D g2d){
 
-		g2d.drawImage(getPlayerImg(),x,y,null);
-
-	}
-
-	public Image getPlayerImg(){
-
-		ImageIcon ic = new ImageIcon("player.png");
-		return ic.getImage();
+		g2d.setColor(Color.WHITE);
+		g2d.drawString(username, x+15, y+68);
+		g2d.drawImage(playerImg,x,y,null);
 
 	}
 
@@ -123,7 +122,7 @@ public class Player extends Entity{
 
 	public Rectangle getBounds(){// gets image boundary (to be used for collision detection)
 
-		return new Rectangle(x, y, getPlayerImg().getWidth(null), getPlayerImg().getHeight(null));
+		return new Rectangle(x, y, playerImg.getWidth(null), playerImg.getHeight(null));
 
 	}
 

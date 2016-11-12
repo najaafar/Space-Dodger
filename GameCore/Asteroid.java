@@ -9,12 +9,14 @@ import java.util.ArrayList;
 public class Asteroid extends Entity{
 
 	int startX, startY;
+	Image asteroidImg;
 
 	public Asteroid(int x, int y){
 
 		super(x,y);
 		startY = y;
 		startX = x;
+		asteroidImg =(new ImageIcon("asteroid.png")).getImage();
 	}
 
 	public void update(){
@@ -29,17 +31,10 @@ public class Asteroid extends Entity{
 
 	public void draw(Graphics2D g2d){
 
-		g2d.drawImage(getAsteroidImg(), x, y, null);
+		g2d.drawString("(" + x + "," + y + ")", x+15, y+68);
+		g2d.drawImage(asteroidImg, x, y, null);
 
 	}
-
-	public Image getAsteroidImg(){
-
-		ImageIcon ic = new ImageIcon("asteroid.png");
-		return ic.getImage();
-
-	}
-
 
 	public void checkOffScreen(){// checks if asteroid goes out of bounds, respawns it back in a random (x,y) position
 
@@ -73,7 +68,7 @@ public class Asteroid extends Entity{
 
 	public Rectangle getBounds(){// gets image boundary (to be used for collision detection)
 
-		return new Rectangle(x, y, getAsteroidImg().getWidth(null), getAsteroidImg().getHeight(null));
+		return new Rectangle(x, y, asteroidImg.getWidth(null), asteroidImg.getHeight(null));
 
 	}
 
