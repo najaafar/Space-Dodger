@@ -1,9 +1,8 @@
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
-import java.awt.Point;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.awt.*;
+
 
 
 public class Main{
@@ -15,9 +14,13 @@ public class Main{
 	private static String username;
 	private static Player player;
 	private static GameFrame game;
+	private static ChatPanel chat;
+	private static JPanel mainPanel;
+	private static String ChatServerAddress = "192.168.0.108";
+	
 
 	public static void main(String args[]) throws IOException{
-		host = "127.0.0.1";
+		host = "192.168.0.108";
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -39,11 +42,18 @@ public class Main{
 			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
-			JFrame frame = new JFrame("Space Dodger");
-
-			frame.setSize(500, 500);
+			game.setPreferredSize(new Dimension(500,500));
+			JFrame frame = new JFrame("Space Dodger: "+username);
+			JPanel mainPanel = new JPanel();
+			mainPanel.setLayout(new GridLayout(1,2));
+			chat = new ChatPanel(username, host);
+			chat.setPreferredSize(new Dimension(500,500));
+			mainPanel.add(chat);
+			mainPanel.add(game);
+			
+			frame.setSize(1000, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.add(game);	// get from server
+			frame.add(mainPanel);	// get from server
 			frame.setResizable(false);
 			frame.setVisible(true);
 		}

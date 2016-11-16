@@ -7,7 +7,10 @@
 
     ```
     cd GameCore
+	javac GameServer.java
+	javac ChatServer.java
     java GameServer
+	java ChatServer
     ```
     * Wait for players to connect to the game. The system will prompt if 3 or more players have connected.
       * Y to start game.

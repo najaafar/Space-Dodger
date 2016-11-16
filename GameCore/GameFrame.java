@@ -32,7 +32,6 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		setFocusable(true);
 		addKeyListener(new KeyAdapt(player));
-
 		mainTimer = new Timer(5, this);
 		mainTimer.start();
 		bg = (new ImageIcon("bg.png")).getImage();
