@@ -1,9 +1,12 @@
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.Timer;
 import java.io.*;
 import java.net.*;
 import java.awt.Point;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.awt.BorderLayout;
 
 
 public class Main{
@@ -15,6 +18,7 @@ public class Main{
 	private static String username;
 	private static Player player;
 	private static GameFrame game;
+	private static TimerFrame time;
 
 	public static void main(String args[]) throws IOException{
 		host = "127.0.0.1";
@@ -39,11 +43,15 @@ public class Main{
 			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
+			time = new TimerFrame();
 			JFrame frame = new JFrame("Space Dodger");
 
+ 
 			frame.setSize(500, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.add(game);	// get from server
+        	frame.setLayout(new BorderLayout());
+			frame.add(game, BorderLayout.CENTER);	// get from server
+	        frame.add(time, BorderLayout.PAGE_START);
 			frame.setResizable(false);
 			frame.setVisible(true);
 		}

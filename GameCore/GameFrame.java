@@ -35,7 +35,8 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		mainTimer = new Timer(5, this);
 		mainTimer.start();
-		bg = (new ImageIcon("bg.png")).getImage();
+
+		bg = (new ImageIcon("bg.png")).getImage(); 
 	}
 
 	public void paint(Graphics g){// draw background, player, asteroids
