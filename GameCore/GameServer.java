@@ -85,8 +85,8 @@ public class GameServer {
 
 		do{
 		    test = new Point();
-		    test.x=position.nextInt(400) + 50;
-		    test.y=position.nextInt(400) + 50;   
+		    test.x = position.nextInt(400) + 50;
+		    test.y = position.nextInt(400) + 50;   
 		    set.add(test);     
 		}
 		while (set.size()<size);

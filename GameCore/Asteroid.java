@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Asteroid extends Entity{
 
-	int startX, startY;
+	int startX, startY = -20;
 	Image asteroidImg;
 
 	public Asteroid(int x, int y){
@@ -40,9 +40,10 @@ public class Asteroid extends Entity{
 
 		if(y >= 700){
 
-			Random rand = new Random();
-			y = rand.nextInt(500)-700;
-			x = rand.nextInt(500);
+			//Random rand = new Random();
+			y = startY;
+			//y = rand.nextInt(500)-700;
+			//x = rand.nextInt(500);
 
 		}
 

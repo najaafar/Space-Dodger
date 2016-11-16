@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.awt.*;
-
-
+import java.awt.event.*;
 
 public class Main{
 
@@ -16,8 +15,8 @@ public class Main{
 	private static GameFrame game;
 	private static ChatPanel chat;
 	private static JPanel mainPanel;
-	private static String ChatServerAddress = "192.168.0.108";
-	
+	//private static MouseListener
+
 
 	public static void main(String args[]) throws IOException{
 		host = "192.168.0.108";
@@ -48,14 +47,55 @@ public class Main{
 			mainPanel.setLayout(new GridLayout(1,2));
 			chat = new ChatPanel(username, host);
 			chat.setPreferredSize(new Dimension(500,500));
-			mainPanel.add(chat);
-			mainPanel.add(game);
 			
+			chat.addMouseListener(new MouseListener() {
+                public void mouseReleased(MouseEvent e) {
+					
+				}
+                public void mousePressed(MouseEvent e) {
+					
+				}
+                public void mouseExited(MouseEvent e) {
+                    
+                }
+                public void mouseEntered(MouseEvent e) {
+                    e.getComponent().requestFocusInWindow();
+                }
+                public void mouseClicked(MouseEvent e) {
+					
+					
+				}
+            });
+			
+			game.addMouseListener(new MouseListener() {
+                public void mouseReleased(MouseEvent e) {
+					
+				}
+                public void mousePressed(MouseEvent e) {
+					
+				}
+                public void mouseExited(MouseEvent e) {
+                    
+                }
+                public void mouseEntered(MouseEvent e) {
+                    e.getComponent().requestFocusInWindow();
+                }
+                public void mouseClicked(MouseEvent e) {
+					
+					
+				}
+            });
+			mainPanel.add(game);
+			mainPanel.add(chat);
+			
+
 			frame.setSize(1000, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.add(mainPanel);	// get from server
 			frame.setResizable(false);
 			frame.setVisible(true);
+			game.setFocusable(true);
+			chat.setFocusable(false);
 		}
 		updatePlayers();	// update server about current position of player and
 							// get information about opponents and asteroids

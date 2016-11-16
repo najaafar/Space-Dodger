@@ -50,19 +50,19 @@ public class Player extends Entity{
 
 		int key = e.getKeyCode();
 
-		if(key == KeyEvent.VK_A){
+		if(key == KeyEvent.VK_LEFT){
 
 			velX = -speed;
 
-		}else if(key == KeyEvent.VK_D){
+		}else if(key == KeyEvent.VK_RIGHT){
 
 			velX = speed;
 
-		}if(key == KeyEvent.VK_W){
+		}if(key == KeyEvent.VK_UP){
 
 			velY = -speed;
 
-		}else if(key == KeyEvent.VK_S){
+		}else if(key == KeyEvent.VK_DOWN){
 
 			velY = speed;
 
@@ -78,19 +78,19 @@ public class Player extends Entity{
 
 		int key = e.getKeyCode();
 
-		if(key == KeyEvent.VK_A){
+		if(key == KeyEvent.VK_LEFT){
 
 			velX = 0;
 
-		}else if(key == KeyEvent.VK_D){
+		}else if(key == KeyEvent.VK_RIGHT){
 
 			velX = 0;
 
-		}if(key == KeyEvent.VK_W){
+		}if(key == KeyEvent.VK_UP){
 
 			velY = 0;
 
-		}else if(key == KeyEvent.VK_S){
+		}else if(key == KeyEvent.VK_DOWN){
 
 			velY = 0;
 
@@ -131,6 +131,6 @@ public class Player extends Entity{
 
 	}
 
-	//public boolean Shoot(boolean shoot_yes){
+	
 
 }

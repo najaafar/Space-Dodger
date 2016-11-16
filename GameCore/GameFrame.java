@@ -108,7 +108,7 @@ public class GameFrame extends JPanel implements ActionListener{
 			asteroids.add(a);
 	}
 
-	public static void addProjectile(Projectile_Blaster a){// adds asteroids
+	public static void addProjectile(Projectile_Blaster a){// adds projectiles
 
 		projectiles.add(a);
 
@@ -139,7 +139,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 	}
 
-	public static ArrayList<Projectile_Blaster> getProjectileList(){// gets list of asteroids
+	public static ArrayList<Projectile_Blaster> getProjectileList(){// gets list of projectiles
 
 		return projectiles;
 

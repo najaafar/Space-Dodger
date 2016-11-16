@@ -105,6 +105,7 @@ public class ChatPanel extends JPanel implements Runnable{
 
         });
 		
+		
 
         socket = new Socket(host, 9999);
 
@@ -125,6 +126,7 @@ public class ChatPanel extends JPanel implements Runnable{
         this.add(tf);
         this.add(send);
         this.add(logout);
+
 
     }
 
