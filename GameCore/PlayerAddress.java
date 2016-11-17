@@ -28,6 +28,10 @@ public class PlayerAddress{
 		return this.port;
 	}
 
+	public double getTime(){
+		return this.time;
+	}
+
 	public Point getCoords(){
 		return coordinates.getLocation();
 	}

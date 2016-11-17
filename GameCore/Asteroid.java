@@ -26,6 +26,7 @@ public class Asteroid extends Entity{
 	/* Uncomment this and implement function if player can shoot projectiles
 		checkCollisions();
 	*/
+		checkCollisions();
 		checkOffScreen();
 	}
 

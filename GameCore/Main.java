@@ -16,11 +16,12 @@ public class Main{
 	private static ChatPanel chat;
 	private static JPanel mainPanel;
 	private static TimerFrame time;
+	private static InfoPlayerFrame info;  //other info for display
 	//private static MouseListener
 
 
 	public static void main(String args[]) throws IOException{
-		host = "192.168.0.108";
+		host = "10.0.5.191";
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -43,14 +44,16 @@ public class Main{
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
 			time = new TimerFrame();
+			info = new InfoPlayerFrame();
 			game.setPreferredSize(new Dimension(500,480));
-			JFrame frame = new JFrame("Space Dodger: "+username);
+			JFrame frame = new JFrame("Space Dodger: [ "+username+ " ]");
 			JPanel mainPanel = new JPanel();
 			JPanel gamePanel = new JPanel();
 			gamePanel.setLayout(new BorderLayout());
 			mainPanel.setLayout(new GridLayout(1,2));
 			gamePanel.add(game, BorderLayout.CENTER);
 			gamePanel.add(time, BorderLayout.NORTH);
+			gamePanel.add(info, BorderLayout.SOUTH);
 			chat = new ChatPanel(username, host);
 			chat.setPreferredSize(new Dimension(500,500));
 			
