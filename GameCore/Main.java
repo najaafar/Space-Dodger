@@ -20,7 +20,7 @@ public class Main{
 
 
 	public static void main(String args[]) throws IOException{
-		host = "127.0.0.1";
+		host = "10.0.4.143";
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -38,6 +38,8 @@ public class Main{
 
 		connectToServer(username);		// attempt to connect to host
 		
+		System.out.println("Waiting for players...");
+
 		if(startGame()){	// if host has sent message to start the game
 			// create game gui
 			player = new Player((int) x, (int) y, username);
@@ -161,11 +163,11 @@ public class Main{
 					String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					String opponent_name = (opponent[2]).trim();
 					for(Opponent o : game.opponents){	// remove opponent
-							if(((o.getUsername()).trim()).equals(opponent_name)){
+						if(((o.getUsername()).trim()).equals(opponent_name)){
 								o.changeStatus();
-								System.out.println(opponent_name + " dead");
-							}
+							chat.ta.append("\n" + opponent_name + " has died.");
 						}
+					}
 				}
 			}
 

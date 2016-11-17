@@ -132,7 +132,7 @@ public class GameServer {
 			// broadcast players' coordinates
 			for(PlayerAddress p : clientAddresses){
 				for(PlayerAddress q : clientAddresses){
-					if(!p.getUsername().equals(q.getUsername())){
+					if(!p.getUsername().equals(q.getUsername()) && !q.sentStatus){
 						if(q.getStatus()){
 							message = new byte[256];
 							message = ("opponent," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
@@ -143,7 +143,8 @@ public class GameServer {
 							message = new byte[256];
 							message = ("opponent,dead," + q.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
-							socket.send(packet);	
+							socket.send(packet);
+							q.sentStatus = true;	
 						}
 					}
 				}
