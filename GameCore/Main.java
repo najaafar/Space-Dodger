@@ -15,6 +15,7 @@ public class Main{
 	private static GameFrame game;
 	private static ChatPanel chat;
 	private static JPanel mainPanel;
+	private static TimerFrame time;
 	//private static MouseListener
 
 
@@ -41,10 +42,15 @@ public class Main{
 			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
-			game.setPreferredSize(new Dimension(500,500));
+			time = new TimerFrame();
+			game.setPreferredSize(new Dimension(500,480));
 			JFrame frame = new JFrame("Space Dodger: "+username);
 			JPanel mainPanel = new JPanel();
+			JPanel gamePanel = new JPanel();
+			gamePanel.setLayout(new BorderLayout());
 			mainPanel.setLayout(new GridLayout(1,2));
+			gamePanel.add(game, BorderLayout.CENTER);
+			gamePanel.add(time, BorderLayout.NORTH);
 			chat = new ChatPanel(username, host);
 			chat.setPreferredSize(new Dimension(500,500));
 			
@@ -85,7 +91,7 @@ public class Main{
 					
 				}
             });
-			mainPanel.add(game);
+			mainPanel.add(gamePanel);
 			mainPanel.add(chat);
 			
 
