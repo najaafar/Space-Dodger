@@ -164,8 +164,7 @@ public class Main{
 					String opponent_name = (opponent[2]).trim();
 					for(Opponent o : game.opponents){	// remove opponent
 						if(((o.getUsername()).trim()).equals(opponent_name)){
-								o.changeStatus();
-							chat.ta.append("\n" + opponent_name + " has died.");
+							o.changeStatus();
 						}
 					}
 				}
