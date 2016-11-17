@@ -8,7 +8,6 @@ public class PlayerAddress{
 	private double time; // "score"
 	private Point coordinates;
 	private boolean isAlive;
-	public boolean sentStatus = false; // para 1x lang masend yung status
 
 	public PlayerAddress(InetAddress a, String u, int p){
 		this.address = a;

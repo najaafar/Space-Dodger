@@ -50,6 +50,8 @@ public class Player extends Entity{
 
 	public void keyPressed(KeyEvent e){
 
+		if(!isAlive) return;
+
 		int key = e.getKeyCode();
 
 		if(key == KeyEvent.VK_LEFT){
