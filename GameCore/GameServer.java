@@ -144,7 +144,8 @@ public class GameServer {
 							message = ("opponent,dead," + q.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
-							q.sentStatus = true;	
+							if(p == clientAddresses.get(clientAddresses.size() - 1))
+								q.sentStatus = true;
 						}
 					}
 				}
