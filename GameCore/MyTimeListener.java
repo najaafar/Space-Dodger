@@ -6,7 +6,7 @@ public class MyTimeListener implements ActionListener{
 
     private int elapsed_sec = 0; 
     private int minute = 1; 
-    
+    private boolean status = false;
 
     private JLabel label;
 
@@ -15,23 +15,31 @@ public class MyTimeListener implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e) { 
-        elapsed_sec--; 
-        if (minute == 1){ 
-        	minute--;
-        	elapsed_sec = 59;
-        }
-        if(elapsed_sec <= 9){
-        	label.setText("Time: " + minute + ":0" + elapsed_sec);
+        if(status == false){
+            elapsed_sec--; 
+            if (minute == 1){ 
+                minute--;
+                elapsed_sec = 2;
+            }
+
+            if(elapsed_sec <= 9){
+                label.setText("Time: " + minute + ":0" + elapsed_sec);
+            } else {
+                label.setText("Time: " + minute + ":" + elapsed_sec);
+            }
+
+            if(minute == 0 && elapsed_sec == 0){ 
+                label.setText("Time's up"); 
+                status = true;
+            } 
+
         } else {
-        	label.setText("Time: " + minute + ":" + elapsed_sec);
+            System.exit(0);
         }
-        
     }
 
-    public boolean stopTimer(){
-    	if(minute == 0 && elapsed_sec == 0){ 
-            label.setText("Time's up"); 
-    		return true;
-    	} else return false;
+
+    public boolean getStatus(){
+        return status;
     }
 }

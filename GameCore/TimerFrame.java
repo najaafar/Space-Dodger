@@ -23,21 +23,13 @@ public class TimerFrame  extends JPanel{
         //start the timer
         timer.start();
 
-        if(listener.stopTimer() == true){
+        if(listener.getStatus() == true){
             timer.stop();  
+            timer.removeActionListener(listener);
             JOptionPane.showMessageDialog(null, "Game Over!");
             System.exit(0);
             return;
         }
   
-    }
-
-    public void checkTimer(){
-        if(listener.stopTimer() == true){
-            timer.stop();  
-            JOptionPane.showMessageDialog(null, "Game Over!");
-            System.exit(0);
-            return;
-        }
     }
 }
