@@ -7,6 +7,7 @@ public class PlayerAddress{
 	private int port;
 	private double time; // "score"
 	private Point coordinates;
+	private boolean isAlive;
 
 	public PlayerAddress(InetAddress a, String u, int p){
 		this.address = a;
@@ -14,6 +15,7 @@ public class PlayerAddress{
 		this.port = p;
 		this.time = 0.0;
 		this.coordinates = new Point(0, 0);
+		this.isAlive = true;
 	}
 
 	public InetAddress getAddress(){
@@ -34,5 +36,13 @@ public class PlayerAddress{
 
 	public void changeCoords(int x, int y){
 		coordinates.setLocation(x, y);
+	}
+
+	public boolean getStatus(){
+		return this.isAlive;
+	}
+
+	public void changeStatus(){
+		isAlive = false;
 	}
 }
