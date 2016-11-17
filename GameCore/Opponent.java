@@ -7,11 +7,13 @@ import java.awt.Rectangle;
 public class Opponent extends Entity{
 	private String username;
 	private Image playerImg; 
+	private boolean isAlive;
 
 	public Opponent(int x, int y, String username){
 		super(x, y);
 		this.username = username;
 		playerImg = (new ImageIcon("player.png")).getImage(); 
+		isAlive = true;
 	}	
 
 	public void updateCoords(int x, int y){
@@ -31,5 +33,13 @@ public class Opponent extends Entity{
 
 	public Rectangle getBounds(){// gets image boundary (to be used for collision detection) 
 		return new Rectangle(x, y, playerImg.getWidth(null), playerImg.getHeight(null)); 
+	}
+
+	public boolean getStatus(){
+		return this.isAlive;
+	}
+
+	public void changeStatus(){
+		isAlive = false;
 	}
 }

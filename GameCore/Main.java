@@ -20,8 +20,8 @@ public class Main{
 	//private static MouseListener
 
 
-	public static void main(String args[]) throws IOException{
-		host = "10.0.5.191";
+	public static void main(String args[]) throws IOException{ 
+		host = "10.0.4.143"; 
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -39,6 +39,8 @@ public class Main{
 
 		connectToServer(username);		// attempt to connect to host
 		
+		System.out.println("Waiting for players...");
+
 		if(startGame()){	// if host has sent message to start the game
 			// create game gui
 			player = new Player((int) x, (int) y, username);
@@ -118,12 +120,20 @@ public class Main{
 		DatagramPacket packet;
 		while(true){
 			// send packet with player's current coordinates
-			message = new byte[256];
-			message = (player.x + "," + player.y + "," + player.username + ",coords").getBytes();
-			packet = new DatagramPacket(message, message.length, address, 9000);
-			socket.send(packet);
+			if(player.isAlive){
+				message = new byte[256];
+				message = (player.x + "," + player.y + "," + player.username + ",coords").getBytes();
+				packet = new DatagramPacket(message, message.length, address, 9000);
+				socket.send(packet);
+			}
 		
-			
+			else{
+				message = new byte[256];
+				message = (player.username + ",dead").getBytes();
+				packet = new DatagramPacket(message, message.length, address, 9000);
+				socket.send(packet);
+			}
+
 			// receive a packet from the server
 			message = new byte[256];
 			packet = new DatagramPacket(message, message.length);
@@ -132,25 +142,36 @@ public class Main{
 
 			// if packet contains opponent coordinates
 			if(from_server.contains("opponent")){
-				try{
-					String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
-					int o_x = Integer.parseInt(opponent[1]);
-					int o_y = Integer.parseInt(opponent[2]);
-					String opponent_name = (opponent[3]).trim();
-					
-					Boolean opponent_exists = false;
-					for(Opponent o : game.opponents){	// update opponent
-						if(((o.getUsername()).trim()).equals(opponent_name)){
+				if(!from_server.contains("dead")){
+					try{
+						String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
+						int o_x = Integer.parseInt(opponent[1]);
+						int o_y = Integer.parseInt(opponent[2]);
+						String opponent_name = (opponent[3]).trim();
+						
+						Boolean opponent_exists = false;
+						for(Opponent o : game.opponents){	// update opponent
+							if(((o.getUsername()).trim()).equals(opponent_name)){
+								o.updateCoords(o_x, o_y);
+								opponent_exists = true;
+							}
+						}
+						if(!opponent_exists)				// add opponent
+							game.opponents.add(new Opponent(o_x, o_y, opponent_name));
 
-							o.updateCoords(o_x, o_y);
-							opponent_exists = true;
+						game.repaint();
+					}catch(Exception e){}
+				}
+				else{
+					String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					String opponent_name = (opponent[2]).trim();
+					for(Opponent o : game.opponents){	// remove opponent
+						if(((o.getUsername()).trim()).equals(opponent_name)){
+								o.changeStatus();
+							chat.ta.append("\n" + opponent_name + " has died.");
 						}
 					}
-					if(!opponent_exists)				// add opponent
-						game.opponents.add(new Opponent(o_x, o_y, opponent_name));
-
-					game.repaint();
-				}catch(Exception e){}
+				}
 			}
 
 			// if packet contains asteroid coordinates

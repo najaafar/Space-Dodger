@@ -132,11 +132,21 @@ public class GameServer {
 			// broadcast players' coordinates
 			for(PlayerAddress p : clientAddresses){
 				for(PlayerAddress q : clientAddresses){
-					if(!p.getUsername().equals(q.getUsername())){
-						message = new byte[256];
-						message = ("opponent," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
-						packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
-						socket.send(packet);
+					if(!p.getUsername().equals(q.getUsername()) && !q.sentStatus){
+						if(q.getStatus()){
+							message = new byte[256];
+							message = ("opponent," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
+							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+							socket.send(packet);
+						}
+						else{
+							message = new byte[256];
+							message = ("opponent,dead," + q.getUsername()).getBytes();
+							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+							socket.send(packet);
+							if(p == clientAddresses.get(clientAddresses.size() - 1))
+								q.sentStatus = true;
+						}
 					}
 				}
 			}
@@ -153,6 +163,14 @@ public class GameServer {
 					for(PlayerAddress q : clientAddresses){
 						if((q.getUsername().trim()).equals((coords[2]).trim())){
 							q.changeCoords(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+						}
+					}
+				}
+				else if(from_player.contains("dead")){
+					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					for(PlayerAddress q : clientAddresses){
+						if((q.getUsername().trim()).equals((msg[0]).trim())){
+							q.changeStatus();
 						}
 					}
 				}

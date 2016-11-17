@@ -41,16 +41,19 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-
 		g2d.drawImage(bg, 0, 0, null);
-		player.draw(g2d);
+
+		if(player.isAlive){
+			player.draw(g2d);
+		}
+
 		for(int i=0; i<asteroids.size(); i++){
 			Asteroid tempAsteroid = asteroids.get(i);
 			tempAsteroid.draw(g2d);
 		}
 
 		for(Opponent o : opponents){
-			o.draw(g2d);
+			if(o.getStatus()) o.draw(g2d);
 		}
 
 		for(Projectile_Blaster tempProjectile : projectiles){

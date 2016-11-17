@@ -15,6 +15,7 @@ public class Player extends Entity{
 	String username;
 	boolean shoot_yes = false;
 	private Image playerImg;
+	boolean isAlive;
 
 	/*  after n collisions, player dies
 		int life = 3;
@@ -25,6 +26,7 @@ public class Player extends Entity{
 		super(x, y);
 		this.username = username;
 		playerImg = (new ImageIcon("player.png")).getImage();
+		isAlive = true;
 	
 	}
 
@@ -34,7 +36,7 @@ public class Player extends Entity{
 		x += velX;
 
 	// comment next line if testing
-	//	checkCollisions();	// checks if player is hit by asteroid
+		checkCollisions();	// checks if player is hit by asteroid
 
 	}
 
@@ -111,13 +113,15 @@ public class Player extends Entity{
 
 			if(getBounds().intersects(tempAsteroid.getBounds())){
 
-				JOptionPane.showMessageDialog(null, "You died!");
-
+				// JOptionPane.showMessageDialog(null, "You died!");
+				
+				isAlive = false;
 				/*
 					remove this player as opponent of other players
 				*/
 					
-				System.exit(0);
+				// System.exit(0);
+
 
 			}
 
