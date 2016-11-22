@@ -21,7 +21,7 @@ public class Main{
 
 
 	public static void main(String args[]) throws IOException{ 
-		host = "10.0.4.143"; 
+		host = ""; 
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -30,12 +30,13 @@ public class Main{
 		y = 200;
 		username = "player1";
 	
-		if(args.length < 1){
-			System.out.println("Usage: java Main username");
+		if(args.length < 2){
+			System.out.println("Usage: java Main <username> <server ip address>");
 			System.exit(1);
 		}
 
 		username = args[0];
+		host = args[1];
 
 		connectToServer(username);		// attempt to connect to host
 		

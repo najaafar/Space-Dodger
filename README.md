@@ -21,7 +21,7 @@
     ```
     cd GameCore
     javac Main.java
-    java Main <username>
+    java Main <username> <server ip address>
     ```
 
 * There must be 3 or more players in order to start the game.

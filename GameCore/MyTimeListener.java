@@ -19,7 +19,7 @@ public class MyTimeListener implements ActionListener{
             elapsed_sec--; 
             if (minute == 1){ 
                 minute--;
-                elapsed_sec = 2;
+                elapsed_sec = 59;
             }
 
             if(elapsed_sec <= 9){
