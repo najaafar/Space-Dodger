@@ -24,11 +24,11 @@ public class TimerFrame  extends JPanel{
         timer.start();
 
         if(listener.getStatus() == true){
+			//JOptionPane.showMessageDialog(null, "Game Over!");
             timer.stop();  
             timer.removeActionListener(listener);
-            JOptionPane.showMessageDialog(null, "Game Over!");
-            System.exit(0);
-            return;
+            //System.exit(0);
+            //return;
         }
   
     }

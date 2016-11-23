@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import javax.swing.*;
 import java.awt.Point;
 import java.util.concurrent.TimeUnit;
 
@@ -14,6 +15,7 @@ public class GameServer {
 	static private ArrayList<Point> points;
 	static private int asteroidCount = 2;
 	static private int numOfPlayers = 0;
+	static private int playerDeathCount = 0;
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 //	public final Runnable receiveInfo;
@@ -134,16 +136,19 @@ public class GameServer {
 				for(PlayerAddress q : clientAddresses){
 					if(!p.getUsername().equals(q.getUsername())){
 						if(q.getStatus()){
+							
 							message = new byte[256];
 							message = ("opponent," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
-						}
-						else{
+							
+						}else{
+							
 							message = new byte[256];
 							message = ("opponent,dead," + q.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
+							
 						}
 					}
 				}
@@ -163,12 +168,44 @@ public class GameServer {
 							q.changeCoords(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 						}
 					}
-				}
-				else if(from_player.contains("dead")){
+				}else if(from_player.contains("dead")){
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					for(PlayerAddress q : clientAddresses){
 						if((q.getUsername().trim()).equals((msg[0]).trim())){
-							q.changeStatus();
+							if(q.getCheckedStatus() == false){// checks if player has been marked "dead" already
+								q.changeStatus();
+								q.isChecked();
+								playerDeathCount = playerDeathCount + 1;
+							}
+						}
+					}
+				}
+				
+				System.out.println("Current Death Count: "+playerDeathCount);
+				
+				if(playerDeathCount == (numOfPlayers - 1)){// checks if only one player is left alive
+				
+					//JOptionPane.showMessageDialog(null,"All other Players have died! Game over!");
+					
+					for(PlayerAddress p : clientAddresses){
+						for(PlayerAddress q : clientAddresses){
+							if(!p.getUsername().equals(q.getUsername())){
+								if(q.getStatus()){
+									
+									message = new byte[256];
+									message = ("WIN," + q.getUsername()).getBytes();
+									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+									socket.send(packet);
+									
+								}else{
+									
+									message = new byte[256];
+									message = ("LOSE," + q.getUsername()).getBytes();
+									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+									socket.send(packet);
+									
+								}
+							}
 						}
 					}
 				}

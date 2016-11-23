@@ -8,6 +8,7 @@ public class PlayerAddress{
 	private double time; // "score"
 	private Point coordinates;
 	private boolean isAlive;
+	private boolean checked = false;
 
 	public PlayerAddress(InetAddress a, String u, int p){
 		this.address = a;
@@ -48,5 +49,13 @@ public class PlayerAddress{
 
 	public void changeStatus(){
 		isAlive = false;
+	}
+	
+	public boolean getCheckedStatus(){
+		return this.checked;
+	}
+
+	public void isChecked(){
+		checked = true;
 	}
 }

@@ -15,6 +15,8 @@ public class Main{
 	private static GameFrame game;
 	private static ChatPanel chat;
 	private static JPanel mainPanel;
+	private static JPanel gamePanel;
+	private static JPanel blackPanel;
 	private static TimerFrame time;
 	private static InfoPlayerFrame info;  //other info for display
 	//private static MouseListener
@@ -50,8 +52,8 @@ public class Main{
 			info = new InfoPlayerFrame();
 			game.setPreferredSize(new Dimension(500,480));
 			JFrame frame = new JFrame("Space Dodger: [ "+username+ " ]");
-			JPanel mainPanel = new JPanel();
-			JPanel gamePanel = new JPanel();
+			mainPanel = new JPanel();
+			gamePanel = new JPanel();
 			gamePanel.setLayout(new BorderLayout());
 			mainPanel.setLayout(new GridLayout(1,2));
 			gamePanel.add(game, BorderLayout.CENTER);
@@ -97,6 +99,26 @@ public class Main{
 					
 				}
             });
+			
+			time.addMouseListener(new MouseListener() {
+                public void mouseReleased(MouseEvent e) {
+					
+				}
+                public void mousePressed(MouseEvent e) {
+					
+				}
+                public void mouseExited(MouseEvent e) {
+                    
+                }
+                public void mouseEntered(MouseEvent e) {
+                    e.getComponent().requestFocusInWindow();
+                }
+                public void mouseClicked(MouseEvent e) {
+					
+					
+				}
+            });
+			
 			mainPanel.add(gamePanel);
 			mainPanel.add(chat);
 			
@@ -115,24 +137,25 @@ public class Main{
 	}
 
 
-
 	private static void updatePlayers() throws IOException {
 		byte[] message;
 		DatagramPacket packet;
 		while(true){
 			// send packet with player's current coordinates
 			if(player.isAlive){
+				
 				message = new byte[256];
 				message = (player.x + "," + player.y + "," + player.username + ",coords").getBytes();
 				packet = new DatagramPacket(message, message.length, address, 9000);
 				socket.send(packet);
-			}
-		
-			else{
+				
+			}else{
+				
 				message = new byte[256];
 				message = (player.username + ",dead").getBytes();
 				packet = new DatagramPacket(message, message.length, address, 9000);
 				socket.send(packet);
+				
 			}
 
 			// receive a packet from the server
@@ -161,21 +184,22 @@ public class Main{
 							game.opponents.add(new Opponent(o_x, o_y, opponent_name));
 
 						game.repaint();
-					}catch(Exception e){}
-				}
-				else{
+					}catch(Exception e){
+						
+					}
+					
+				}else{
 					String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					String opponent_name = (opponent[2]).trim();
+					
 					for(Opponent o : game.opponents){	// remove opponent
 						if(((o.getUsername()).trim()).equals(opponent_name)){
 							o.changeStatus();
 						}
 					}
 				}
-			}
-
-			// if packet contains asteroid coordinates
-			else if(from_server.contains("asteroid")){
+				
+			}else if(from_server.contains("asteroid")){// if packet contains asteroid coordinates
 				// TODO: minsan hindi nakukuha yung message kahit na-broadcast
 					try{
 						String[] ast_coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -185,7 +209,56 @@ public class Main{
 						
 						System.out.println("Received asteroid coordinates of " + ax + ", " + ay);
 						game.addAsteroid(new Asteroid(ax+100, ay-700));
-					}catch(Exception e){}
+						
+					}catch(Exception e){
+						
+					}
+			}else if(from_server.contains("WIN")){// if packet contains asteroid coordinates
+
+					try{
+						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
+
+						String name = res[1];
+						
+						gamePanel.remove(time);
+						gamePanel.remove(game);
+						gamePanel.remove(info);
+						
+						blackPanel = new JPanel();
+						blackPanel.setBackground(Color.BLACK);
+						gamePanel.add(blackPanel, BorderLayout.CENTER);
+						
+						gamePanel.validate();
+						gamePanel.repaint();
+						JOptionPane.showMessageDialog(null,"You won, "+name+"! :D");
+						break;
+						
+					}catch(Exception e){
+						
+					}
+			}else if(from_server.contains("LOSE")){// if packet contains asteroid coordinates
+
+					try{
+						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
+
+						String name = res[1];
+						System.out.println(name + ", you lost. :(");
+						gamePanel.remove(time);
+						gamePanel.remove(game);
+						gamePanel.remove(info);
+						
+						blackPanel = new JPanel();
+						blackPanel.setBackground(Color.BLACK);
+						gamePanel.add(blackPanel, BorderLayout.CENTER);
+						
+						gamePanel.validate();
+						gamePanel.repaint();
+						JOptionPane.showMessageDialog(null,"Too bad you lost, "+name+"! :(");
+						break;
+						
+					}catch(Exception e){
+						
+					}
 			}
 
 			// TODO: receive packet with time left and ranking
