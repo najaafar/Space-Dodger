@@ -12,17 +12,17 @@
     java GameServer
 	java ChatServer
     ```
-    * Wait for players to connect to the game. The system will prompt if 3 or more players have connected.
+    * Wait for players to connect to the game. The system will prompt if at least 2 or more players have connected.
       * Y to start game.
       * N to wait for more players.
 
   2. As a Player
-    * Change string host in GameCore/Main.java to server's current IP address
+    
     ```
     cd GameCore
     javac Main.java
     java Main <username> <server ip address>
     ```
 
-* There must be 3 or more players in order to start the game.
+* There must be at least 2 or more players in order to start the game.
   * To change minimum players, modify the condition in waitForPlayers() in GameServer.java
