@@ -23,7 +23,7 @@ public class Main{
 
 
 	public static void main(String args[]) throws IOException{ 
-		host = ""; 
+		host = args[1]; 
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -38,7 +38,6 @@ public class Main{
 		}
 
 		username = args[0];
-		host = args[1];
 
 		connectToServer(username);		// attempt to connect to host
 		
