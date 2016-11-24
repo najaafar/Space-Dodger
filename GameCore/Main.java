@@ -131,7 +131,7 @@ public class Main{
 			chat.setFocusable(false);
 		}
 		updatePlayers();	// update server about current position of player and
-							// get information about opponents and asteroids
+							// get information about opponents and asteroids and projectiles
 		socket.close();		// game finish
 	}
 
@@ -204,6 +204,28 @@ public class Main{
 					}
 				}
 				
+			}else if(from_server.contains("projectile")){
+				try{
+					String[] projectile = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					int o_x = Integer.parseInt(projectile[1]);
+					int o_y = Integer.parseInt(projectile[2]);
+					String projectile_name = (projectile[3]).trim();
+						
+					Boolean projectile_exists = false;
+					for(Projectile_Blaster o : game.projectiles){	// update projectile
+						if(((o.getUsername()).trim()).equals(projectile_name)){
+							o.updateCoords(o_x, o_y);
+							projectile_exists = true;
+						}
+					}
+					if(!projectile_exists)				// add projectile
+						game.projectiles.add(new Projectile_Blaster(o_x, o_y, projectile_name));
+
+					game.repaint();
+				}catch(Exception e){
+					//read projectile failed
+				}
+
 			}else if(from_server.contains("asteroid")){// if packet contains asteroid coordinates
 				// TODO: minsan hindi nakukuha yung message kahit na-broadcast
 					try{
