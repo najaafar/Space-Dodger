@@ -141,6 +141,14 @@ public class Main{
 		byte[] message;
 		DatagramPacket packet;
 		while(true){
+			// send packet if player logs out
+			if(!chat.login_status){
+				message = new byte[256];
+				message = (player.username + ",logout").getBytes();
+				packet = new DatagramPacket(message, message.length, address, 9000);
+				socket.send(packet);
+			}
+
 			// send packet with player's current coordinates
 			if(player.isAlive){
 				
@@ -150,12 +158,10 @@ public class Main{
 				socket.send(packet);
 				
 			}else{
-				
 				message = new byte[256];
 				message = (player.username + ",dead").getBytes();
 				packet = new DatagramPacket(message, message.length, address, 9000);
 				socket.send(packet);
-				
 			}
 
 			// receive a packet from the server
@@ -208,7 +214,7 @@ public class Main{
 						int ay = Integer.parseInt(ast_coordinates[1]);
 						
 						System.out.println("Received asteroid coordinates of " + ax + ", " + ay);
-						game.addAsteroid(new Asteroid(ax+100, ay-700));
+						game.addAsteroid(new Asteroid(ax-50, ay-700));
 						
 					}catch(Exception e){
 						

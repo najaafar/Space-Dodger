@@ -20,7 +20,6 @@ public class GameFrame extends JPanel implements ActionListener{
 	static ArrayList<Projectile_Blaster> projectiles = new ArrayList<Projectile_Blaster>();
 	static ArrayList<Opponent> opponents = new ArrayList<Opponent>();
 
-	public int asteroidCount = 2;
 	int syncCounter = 0;
 	public static int level = 1;
 
@@ -48,8 +47,7 @@ public class GameFrame extends JPanel implements ActionListener{
 		}
 
 		for(int i=0; i<asteroids.size(); i++){
-			Asteroid tempAsteroid = asteroids.get(i);
-			tempAsteroid.draw(g2d);
+			(asteroids.get(i)).draw(g2d);
 		}
 
 		for(Opponent o : opponents){
@@ -107,7 +105,7 @@ public class GameFrame extends JPanel implements ActionListener{
 	}
 
 	public static void addAsteroid(Asteroid a){// adds asteroids
-		if(asteroids.size() <= 2)
+	//	if(asteroids.size() <= GameServer.asteroidCount)
 			asteroids.add(a);
 	}
 

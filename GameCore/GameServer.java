@@ -13,13 +13,11 @@ public class GameServer {
 	static private ArrayList<Point> asteroids = new ArrayList<>();
 	static private DatagramSocket socket;
 	static private ArrayList<Point> points;
-	static private int asteroidCount = 2;
+	static protected int asteroidCount = 1;
 	static private int numOfPlayers = 0;
 	static private int playerDeathCount = 0;
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
-//	public final Runnable receiveInfo;
-//	public final Runnable sendInfo;
 
 	public GameServer(){
 		sendAsteroid = new Runnable(){
@@ -30,7 +28,7 @@ public class GameServer {
 				while(true){
 					
 					try{
-					TimeUnit.SECONDS.sleep(3L);
+					TimeUnit.SECONDS.sleep(2L);
 					// send packet with asteroid coordinates every 2 seconds
 					} catch(InterruptedException e){}
 
@@ -40,9 +38,6 @@ public class GameServer {
 		    			asteroids = generateRandomPoints(asteroidCount);
 
 		    			for(Point asteroid : asteroids){
-		    				try{
-								TimeUnit.SECONDS.sleep(1L);
-							} catch(InterruptedException e){}
 							message = new byte[256];
 							message = ((int)(asteroid.getX()) + "," + (int)(asteroid.getY()) + ",asteroid").getBytes();
 							for(PlayerAddress p : clientAddresses){
@@ -55,18 +50,6 @@ public class GameServer {
 				}
 			}
 		};
-/*
-		receiveInfo = new Runnable(){
-			public void run(){
-
-			}
-		};
-		sendInfo = new Runnable(){
-			public void run(){
-
-			}
-		};
-*/
 	}
 
 	public static void main(String args[]) throws IOException {
@@ -130,7 +113,6 @@ public class GameServer {
 		new Thread(gs.sendAsteroid).start();
 
 		while(true){
-			
 			// broadcast players' coordinates
 			for(PlayerAddress p : clientAddresses){
 				for(PlayerAddress q : clientAddresses){
@@ -179,9 +161,13 @@ public class GameServer {
 							}
 						}
 					}
+				}else if(from_player.contains("logout")){
+					System.out.println("logout a player");
+					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					removePlayer(msg[0].trim());
 				}
 				
-				System.out.println("Current Death Count: "+playerDeathCount);
+		//		System.out.println("Current Death Count: "+playerDeathCount);
 				
 				if(playerDeathCount == (numOfPlayers - 1)){// checks if only one player is left alive
 				
@@ -235,6 +221,21 @@ public class GameServer {
 				char choice = IN.readLine().charAt(0);
 				if(choice == 'Y' || choice == 'y') break;
 			}
+		}
+	}
+
+	protected static void removePlayer(String name){
+		int i = 0;
+		
+		for(PlayerAddress q : clientAddresses){
+			if(name.equals(q.getUsername().trim())){
+				System.out.println(name + " removed");
+				try{
+					clientAddresses.remove(i);
+				}catch(ConcurrentModificationException e){
+				}
+			}
+			i++;
 		}
 	}
 }

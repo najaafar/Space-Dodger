@@ -85,7 +85,6 @@ public class Player extends Entity{
 		if(key == KeyEvent.VK_LEFT){
 
 			velX = 0;
-
 		}else if(key == KeyEvent.VK_RIGHT){
 
 			velX = 0;

@@ -32,7 +32,7 @@ public class Asteroid extends Entity{
 
 	public void draw(Graphics2D g2d){
 
-		g2d.drawString("(" + x + "," + y + ")", x+15, y+68);
+	//	g2d.drawString("(" + x + "," + y + ")", x+15, y+68);
 		g2d.drawImage(asteroidImg, x, y, null);
 
 	}

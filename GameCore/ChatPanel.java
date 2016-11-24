@@ -20,6 +20,8 @@ public class ChatPanel extends JPanel implements Runnable{
     String LoginName;
 	String host;
 
+    boolean login_status = true;
+
     ChatPanel(String login, String address) throws UnknownHostException, IOException{
 		
         LoginName = login;
@@ -92,7 +94,7 @@ public class ChatPanel extends JPanel implements Runnable{
             public void actionPerformed(ActionEvent e){
 				
                 try{
-					
+					login_status = false;
                     dout.writeUTF(LoginName + " " + "LOGOUT");
                     System.exit(1);
 					
