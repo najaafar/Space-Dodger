@@ -5,13 +5,19 @@
 * The following commands are for testing. To play the game:
   1.  As the Server
 
+    * For the Game:
     ```
     cd GameCore
-	javac GameServer.java
-	javac ChatServer.java
-    java GameServer
-	java ChatServer
+	javac GameServer.java 
+    java GameServer 
     ```
+    * For the Chat:
+    ```
+    cd GameCore 
+  javac ChatServer.java 
+  java ChatServer
+    ```
+    
     * Wait for players to connect to the game. The system will prompt if at least 2 or more players have connected.
       * Y to start game.
       * N to wait for more players.
