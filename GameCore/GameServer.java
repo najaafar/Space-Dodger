@@ -190,13 +190,14 @@ public class GameServer {
 					
 					for(PlayerAddress p : clientAddresses){
 						for(PlayerAddress q : clientAddresses){
-							if(!p.getUsername().equals(q.getUsername())){
+							if(p.getUsername().equals(q.getUsername())){
 								if(q.getStatus()){
 									
 									message = new byte[256];
 									message = ("WIN," + q.getUsername()).getBytes();
 									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 									socket.send(packet);
+									break;
 									
 								}else{
 									
@@ -204,6 +205,7 @@ public class GameServer {
 									message = ("LOSE," + q.getUsername()).getBytes();
 									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 									socket.send(packet);
+									break;
 									
 								}
 							}

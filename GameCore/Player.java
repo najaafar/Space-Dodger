@@ -113,16 +113,8 @@ public class Player extends Entity{
 			Asteroid tempAsteroid = asteroids.get(i);
 
 			if(getBounds().intersects(tempAsteroid.getBounds())){
-
-				// JOptionPane.showMessageDialog(null, "You died!");
 				
 				isAlive = false;
-				/*
-					remove this player as opponent of other players
-				*/
-					
-				// System.exit(0);
-
 
 			}
 
