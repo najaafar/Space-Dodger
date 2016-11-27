@@ -14,7 +14,7 @@ public class MyTimeListener implements ActionListener{
         this.label = label;
     }
 
-    public void actionPerformed(ActionEvent e) { 
+    public void actionPerformed(ActionEvent e){ 
         if(status == false){
             elapsed_sec--; 
             if (minute == 1){ 
@@ -38,8 +38,13 @@ public class MyTimeListener implements ActionListener{
         }
     }
 
-
     public boolean getStatus(){
         return status;
     }
+	
+	public int getTime(){
+		
+		return elapsed_sec;
+		
+	}
 }

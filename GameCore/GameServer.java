@@ -159,13 +159,16 @@ public class GameServer {
 
 			// if message contained coordinates of a player
 				if(from_player.contains("coords")){
+					
 					String[] coords = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					for(PlayerAddress q : clientAddresses){
 						if((q.getUsername().trim()).equals((coords[2]).trim())){
 							q.changeCoords(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 						}
 					}
+					
 				}else if(from_player.contains("dead")){
+					
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					for(PlayerAddress q : clientAddresses){
 						if((q.getUsername().trim()).equals((msg[0]).trim())){
@@ -176,17 +179,31 @@ public class GameServer {
 							}
 						}
 					}
+					
 				}else if(from_player.contains("logout")){
+					
 					System.out.println("logout a player");
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					removePlayer(msg[0].trim());
+					
+				}else if(from_player.contains("TIME_END")){
+					
+					System.out.println("Timer has ended.");
+					
+					for(PlayerAddress p : clientAddresses){
+			
+							message = new byte[256];
+							message = ("TIME_IS_UP," + p.getUsername()).getBytes();
+							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+							socket.send(packet);
+						
+					}
+
 				}
 				
 		//		System.out.println("Current Death Count: "+playerDeathCount);
 				
 				if(playerDeathCount == (numOfPlayers - 1)){// checks if only one player is left alive
-				
-					//JOptionPane.showMessageDialog(null,"All other Players have died! Game over!");
 					
 					for(PlayerAddress p : clientAddresses){
 						for(PlayerAddress q : clientAddresses){
@@ -212,6 +229,8 @@ public class GameServer {
 						}
 					}
 				}
+				
+				
 		}
 	}
 

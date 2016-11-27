@@ -36,7 +36,7 @@ public class Player extends Entity{
 		x += velX;
 
 	// comment next line if testing
-		checkCollisions();	// checks if player is hit by asteroid
+	//	checkCollisions();	// checks if player is hit by asteroid
 
 	}
 

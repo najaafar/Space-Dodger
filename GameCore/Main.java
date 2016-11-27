@@ -17,7 +17,7 @@ public class Main{
 	private static JPanel mainPanel;
 	private static JPanel gamePanel;
 	private static JPanel blackPanel;
-	private static TimerFrame time;
+	private static TimerFrame time = new TimerFrame();;
 	private static InfoPlayerFrame info;  //other info for display
 	//private static MouseListener
 
@@ -47,7 +47,7 @@ public class Main{
 			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
-			time = new TimerFrame();
+			//time = new TimerFrame();
 			info = new InfoPlayerFrame();
 			game.setPreferredSize(new Dimension(500,480));
 			JFrame frame = new JFrame("Space Dodger: [ "+username+ " ]");
@@ -240,7 +240,7 @@ public class Main{
 					}catch(Exception e){
 						
 					}
-			}else if(from_server.contains("WIN")){// if packet contains asteroid coordinates
+			}else if(from_server.contains("WIN")){// if packet contains WIN flag
 
 					try{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -263,13 +263,13 @@ public class Main{
 					}catch(Exception e){
 						
 					}
-			}else if(from_server.contains("LOSE")){// if packet contains asteroid coordinates
+			}else if(from_server.contains("LOSE")){// if packet contains LOSE flag
 
 					try{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 						String name = res[1];
-						System.out.println(name + ", you lost. :(");
+						//System.out.println(name + ", you lost. :(");
 						gamePanel.remove(time);
 						gamePanel.remove(game);
 						gamePanel.remove(info);
@@ -286,9 +286,48 @@ public class Main{
 					}catch(Exception e){
 						
 					}
+					
+			}else if(from_server.contains("TIME_IS_UP")){// if packet contains TIME_IS_UP flag
+
+					try{
+						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
+
+						String name = res[1];
+						
+						/*
+							fetch scores and rankings and add them to blackPanel
+						*/
+
+						gamePanel.remove(time);
+						gamePanel.remove(game);
+						gamePanel.remove(info);
+						
+						blackPanel = new JPanel();
+						blackPanel.setBackground(Color.BLUE);
+						JLabel sample = new JLabel("TIME IS UP!");
+						blackPanel.add(sample);
+						gamePanel.add(blackPanel, BorderLayout.CENTER);
+						
+						gamePanel.validate();
+						gamePanel.repaint();
+						JOptionPane.showMessageDialog(null,"Time's up!");
+						break;
+					}catch(Exception e){
+						
+					}
 			}
 
-			// TODO: receive packet with time left and ranking
+			System.out.println(time.isTimerOn());
+			
+			// Comment this part if it interferes with your implementation
+			if(time.isTimerOn() == false){// checks if timer hits zero
+			
+				message = new byte[256];
+				message = ("TIME_END" + "," + player.username).getBytes();
+				packet = new DatagramPacket(message, message.length, address, 9000);
+				socket.send(packet);
+				
+			}
 			
 		}
 	}

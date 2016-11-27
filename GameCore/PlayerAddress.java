@@ -58,4 +58,5 @@ public class PlayerAddress{
 	public void isChecked(){
 		checked = true;
 	}
+	
 }
