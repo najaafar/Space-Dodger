@@ -57,7 +57,7 @@ public class GameServer {
 				byte message[] = new byte[256];
 				DatagramPacket packet = null;
 				
-				int timet = 1 * 60; // convert to seconds
+				int timet = 3 * 60; // convert to seconds
 				long delay = timet * 1000;
 				
 				do{
