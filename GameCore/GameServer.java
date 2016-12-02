@@ -16,6 +16,7 @@ public class GameServer {
 	static protected int asteroidCount = 1;
 	static private int numOfPlayers = 0;
 	static private int playerDeathCount = 0;
+	static private boolean timeEnd;
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 	public final Runnable startGameClock;
@@ -57,7 +58,7 @@ public class GameServer {
 				byte message[] = new byte[256];
 				DatagramPacket packet = null;
 				
-				int timet = 3 * 60; // convert to seconds
+				int timet = 1 * 60; // convert to seconds
 				long delay = timet * 1000;
 				
 				do{
@@ -67,8 +68,7 @@ public class GameServer {
 						int minutes = timet / 60;
 						int seconds = timet % 60;
 						
-						
-						for(PlayerAddress p : clientAddresses){
+						for(PlayerAddress p : clientAddresses){// broadcasts game time (in seconds) to all players
 			
 							message = new byte[256];
 							message = ("GAME_CLOCK" + "," + timet).getBytes();
@@ -83,6 +83,17 @@ public class GameServer {
 
 					}catch(Exception ex) {}
 				}while(delay > -1);
+				
+				try{// broadcasts to all players that the timer has ended
+					for(PlayerAddress p : clientAddresses){
+						message = new byte[256];
+						message = ("TIME_IS_UP" + "," + p.getUsername()).getBytes();
+						packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+						socket.send(packet);
+					}
+					
+				}catch(Exception el){
+				}
 			}
 		};
 		

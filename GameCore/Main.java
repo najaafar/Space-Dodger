@@ -20,7 +20,6 @@ public class Main{
 	private static JPanel blackPanel;
 	private static TimerFrame time = new TimerFrame();;
 	private static InfoPlayerFrame info;  //other info for display
-	//private static MouseListener
 
 
 	public static void main(String args[]) throws IOException{ 
@@ -40,7 +39,7 @@ public class Main{
 
 		username = args[0];
 
-		connectToServer(username);		// attempt to connect to host
+		connectToServer(username);// attempt to connect to host
 		
 		System.out.println("Waiting for players...");
 
@@ -48,7 +47,6 @@ public class Main{
 			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
-			//time = new TimerFrame();
 			info = new InfoPlayerFrame();
 			game.setPreferredSize(new Dimension(500,480));
 			JFrame frame = new JFrame("Space Dodger: [ "+username+ " ]");
@@ -242,7 +240,7 @@ public class Main{
 					}catch(Exception e){
 						
 					}
-			}else if(from_server.contains("WIN")){// if packet contains WIN flag
+			}else if(from_server.contains("WIN")){// if packet contains WIN flag, prompt that the player won
 
 					try{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -265,13 +263,12 @@ public class Main{
 					}catch(Exception e){
 						
 					}
-			}else if(from_server.contains("LOSE")){// if packet contains LOSE flag
+			}else if(from_server.contains("LOSE")){// if packet contains LOSE flag, prompt that the player lost
 
 					try{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 						String name = res[1];
-						//System.out.println(name + ", you lost. :(");
 						gamePanel.remove(time);
 						gamePanel.remove(game);
 						gamePanel.remove(info);
@@ -291,7 +288,7 @@ public class Main{
 					
 			}
 				
-			if(from_server.contains("GAME_CLOCK")){// if packet contains GAME_CLOCK flag
+			if(from_server.contains("GAME_CLOCK")){// if packet contains GAME_CLOCK flag, update JLabel on TimeFrame
 
 				try{
 					String[] game_clock = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -304,14 +301,11 @@ public class Main{
 					gamePanel.repaint();
 					
 				}catch(Exception ex){
-					
+
 				}		
 			}
 			
-			
-			
-		/*
-			else if(from_server.contains("TIME_IS_UP")){// if packet contains TIME_IS_UP flag
+			if(from_server.contains("TIME_IS_UP")){// if packet contains TIME_IS_UP flag, display scores, rankings and ends the game
 
 					try{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -340,19 +334,7 @@ public class Main{
 						
 					}
 			}
-
-			System.out.println(time.isTimerOn());
-			
-			// Comment this part if it interferes with your implementation
-			if(time.isTimerOn() == false){// checks if timer hits zero
-			
-				message = new byte[256];
-				message = ("TIME_END" + "," + player.username).getBytes();
-				packet = new DatagramPacket(message, message.length, address, 9000);
-				socket.send(packet);
-				
-			}
-		*/
+		
 		}
 	}
 
