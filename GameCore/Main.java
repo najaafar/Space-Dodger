@@ -11,6 +11,7 @@ public class Main{
 	private static String host;
 	private static InetAddress address;
 	private static String username;
+	private static int curr_time;
 	private static Player player;
 	private static GameFrame game;
 	private static ChatPanel chat;
@@ -168,9 +169,10 @@ public class Main{
 			packet = new DatagramPacket(message, message.length);
 			socket.receive(packet);
 			String from_server = new String(packet.getData(), 0, packet.getLength());
-
+			
 			// if packet contains opponent coordinates
 			if(from_server.contains("opponent")){
+				
 				if(!from_server.contains("dead")){
 					try{
 						String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -287,16 +289,38 @@ public class Main{
 						
 					}
 					
-			}else if(from_server.contains("TIME_IS_UP")){// if packet contains TIME_IS_UP flag
+			}
+				
+			if(from_server.contains("GAME_CLOCK")){// if packet contains GAME_CLOCK flag
+
+				try{
+					String[] game_clock = (new String(packet.getData(), 0, packet.getLength())).split(",");
+
+					int game_time = Integer.parseInt(game_clock[1]);
+					System.out.println(game_time);
+					
+					time.setTime(Integer.toString(game_time));
+					gamePanel.validate();
+					gamePanel.repaint();
+					
+				}catch(Exception ex){
+					
+				}		
+			}
+			
+			
+			
+		/*
+			else if(from_server.contains("TIME_IS_UP")){// if packet contains TIME_IS_UP flag
 
 					try{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 						String name = res[1];
 						
-						/*
-							fetch scores and rankings and add them to blackPanel
-						*/
+						
+						//	fetch scores and rankings and add them to blackPanel
+						
 
 						gamePanel.remove(time);
 						gamePanel.remove(game);
@@ -328,7 +352,7 @@ public class Main{
 				socket.send(packet);
 				
 			}
-			
+		*/
 		}
 	}
 

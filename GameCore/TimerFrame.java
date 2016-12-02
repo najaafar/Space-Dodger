@@ -6,40 +6,49 @@ import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 
 public class TimerFrame  extends JPanel{
-    MyTimeListener listener; 
+    //MyTimeListener listener; 
     Timer timer;
 	int time;
 	boolean timerEnd;
+	JLabel label;
 	
     public TimerFrame() {
 		timerEnd = true;
-        JLabel label = new JLabel("Time: 1:00");
+        label = new JLabel("Time: 1:00");
 
         add(label, BorderLayout.PAGE_START);
 
-        // pass the label into the MyTimeListener constructor
-        listener = new MyTimeListener(label);
 
-		//	the timer fires every 1000 MS (1 second) when it does, it calls the actionPerformed() method of MyTimeListener		
-        timer = new Timer(1000, listener);
-		
-        //start the timer
-        timer.start();
-/*
-        if(listener.getStatus() == true){
-			System.out.println(listener.getStatus());
-			this.setTimeEnd(false);
-            //this.timer.stop();  
-            //timer.removeActionListener(listener);
-			
-        }
-  */
     }
 	
-	public void setTime(int time){
+	public void setTime(String time){
 		
-		this.time = time;
+		int temp = Integer.parseInt(time);
+		int minute = temp / 60;
+		int second = temp % 60;
 		
+		if(minute > 0){
+			
+			if(second < 10){
+				this.label.setText("Time: "+ minute + ":0" + second);
+			}else{
+				this.label.setText("Time: "+ minute + ":" + second);
+			}
+			
+		}else if(minute < 0){
+			
+			if(second < 10){
+				this.label.setText("Time: "+ minute + ":0" + second);
+			}else{
+				this.label.setText("Time: "+ minute + ":" + second);
+			}
+			
+		}
+		
+		if(minute == 0 && second == 0){
+			this.label.setText("Time's Up");
+		
+		}
 	}
 	
 	public int getTimeLeft(){
@@ -53,19 +62,5 @@ public class TimerFrame  extends JPanel{
 		this.timerEnd = temp;
 		
 	}
-	
-	public boolean isTimerOn(){
-		
-		if(listener.getStatus() == true){
-			System.out.println(listener.getStatus());
-			this.setTimeEnd(false);
-            this.timer.stop();  
-            timer.removeActionListener(listener);
-			
-        }
-		
-		return this.timerEnd;
-		
-	}
-	
+
 }

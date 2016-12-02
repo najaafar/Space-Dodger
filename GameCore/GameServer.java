@@ -18,6 +18,7 @@ public class GameServer {
 	static private int playerDeathCount = 0;
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
+	public final Runnable startGameClock;
 
 	public GameServer(){
 		sendAsteroid = new Runnable(){
@@ -50,6 +51,41 @@ public class GameServer {
 				}
 			}
 		};
+		
+		startGameClock = new Runnable(){
+			public void run(){
+				byte message[] = new byte[256];
+				DatagramPacket packet = null;
+				
+				int timet = 1 * 60; // convert to seconds
+				long delay = timet * 1000;
+				
+				do{
+
+					try {
+
+						int minutes = timet / 60;
+						int seconds = timet % 60;
+						
+						
+						for(PlayerAddress p : clientAddresses){
+			
+							message = new byte[256];
+							message = ("GAME_CLOCK" + "," + timet).getBytes();
+							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+							socket.send(packet);
+							System.out.println(minutes +" minute(s), " + seconds + " second(s)");
+						}
+						
+						Thread.sleep(1000);
+						timet = timet - 1;
+						delay = delay - 1000;
+
+					}catch(Exception ex) {}
+				}while(delay > -1);
+			}
+		};
+		
 	}
 
 	public static void main(String args[]) throws IOException {
@@ -111,6 +147,7 @@ public class GameServer {
 
 		// send asteroid coordinates every 3 seconds
 		new Thread(gs.sendAsteroid).start();
+		new Thread(gs.startGameClock).start();
 
 		while(true){
 			// broadcast players' coordinates
@@ -186,7 +223,10 @@ public class GameServer {
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					removePlayer(msg[0].trim());
 					
-				}else if(from_player.contains("TIME_END")){
+				}
+				
+			/*	
+				else if(from_player.contains("TIME_END")){
 					
 					System.out.println("Timer has ended.");
 					
@@ -200,7 +240,7 @@ public class GameServer {
 					}
 
 				}
-				
+			*/	
 		//		System.out.println("Current Death Count: "+playerDeathCount);
 				
 				if(playerDeathCount == (numOfPlayers - 1)){// checks if only one player is left alive
