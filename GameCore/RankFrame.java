@@ -8,37 +8,45 @@ import java.awt.Component;
 import javax.swing.table.TableCellRenderer;
 import java.awt.Dimension;
 import java.lang.Character;
+import javax.swing.RowSorter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 
 //class for the table
 public class RankFrame extends JPanel {
 
 	JTable jt;
 
-  public RankFrame(){ //TODO Data as parameter
+  public RankFrame(String input,String player_list){ //TODO Data as parameter
 
-		String[] columns = {"Rank", "Player"}; //TODO Add stats cols
-		//read output.txt
+		String[] columns = {"Player", "Score"}; //TODO Add stats cols
 		String[][] data = new String[50][2];
+		String[] scores = input.split(",");
 
-
-    /*
-      TODO Sort by time
-
-    */
-
-
-
-
-		int i = 0;
     int j;
-		for(/*each player*/){
-      j = i + 1;
-  			data[i][0] = new String("Rank" + j);
-				data[i][1] = //player name
-        //data[i][....] for stats
+		int s = scores.length;
+		for(int i = 0;i<s;i++){
+       j = i + 1;
+  	 		data[i][0] = new String("Player" + j);
+		 		data[i][1] = scores[i];//player name
+         //data[i][....] for stats
 		}
 
-		jt = new JTable(data, columns)
+		TableModel model = new DefaultTableModel(data, columns) {
+	    @Override
+	    public Class getColumnClass(int columns) {
+	        Class returnValue;
+	        if ((columns >= 0) && (columns < getColumnCount())) {
+	            returnValue = getValueAt(0, columns).getClass();
+	        } else {
+	            returnValue = Object.class;
+	        }
+	        return returnValue;
+	    }
+    };
+		jt = new JTable(model)
 		{
 			public boolean isCellEditable(int data, int columns)
 			{
@@ -55,12 +63,17 @@ public class RankFrame extends JPanel {
 
 		};
 
+		 RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+     jt.setRowSorter(sorter);
 		 jt.setPreferredScrollableViewportSize(new Dimension(300,500));
 		 jt.setFillsViewportHeight(true);
+		 //System.out.println(player_list)
 		 //insert table to a scrollpane
 		 JScrollPane jps = new JScrollPane(jt);
+		 //JLabel label = new JLabel(player_list);
 		 //show table in panel
-		 //add(jps);
+		 //add(label);
+		 add(jps);
 	}
 
 }

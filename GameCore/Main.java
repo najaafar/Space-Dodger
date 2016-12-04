@@ -20,10 +20,11 @@ public class Main{
 	private static JPanel blackPanel;
 	private static TimerFrame time = new TimerFrame();;
 	private static InfoPlayerFrame info;  //other info for display
+	private static RankFrame rankings;
+	private static String playerlist;
 
-
-	public static void main(String args[]) throws IOException{ 
-		host = args[1]; 
+	public static void main(String args[]) throws IOException{
+		host = args[1];
 		address = InetAddress.getByName(host);
 		socket = new DatagramSocket();
 
@@ -31,7 +32,7 @@ public class Main{
 		x = 400;
 		y = 200;
 		username = "player1";
-	
+
 		if(args.length < 2){
 			System.out.println("Usage: java Main <username> <server ip address>");
 			System.exit(1);
@@ -40,7 +41,7 @@ public class Main{
 		username = args[0];
 
 		connectToServer(username);// attempt to connect to host
-		
+
 		System.out.println("Waiting for players...");
 
 		if(startGame()){	// if host has sent message to start the game
@@ -59,67 +60,67 @@ public class Main{
 			gamePanel.add(info, BorderLayout.SOUTH);
 			chat = new ChatPanel(username, host);
 			chat.setPreferredSize(new Dimension(500,500));
-			
+
 			chat.addMouseListener(new MouseListener() {
                 public void mouseReleased(MouseEvent e) {
-					
+
 				}
                 public void mousePressed(MouseEvent e) {
-					
+
 				}
                 public void mouseExited(MouseEvent e) {
-                    
+
                 }
                 public void mouseEntered(MouseEvent e) {
                     e.getComponent().requestFocusInWindow();
                 }
                 public void mouseClicked(MouseEvent e) {
-					
-					
+
+
 				}
             });
-			
+
 			game.addMouseListener(new MouseListener() {
                 public void mouseReleased(MouseEvent e) {
-					
+
 				}
                 public void mousePressed(MouseEvent e) {
-					
+
 				}
                 public void mouseExited(MouseEvent e) {
-                    
+
                 }
                 public void mouseEntered(MouseEvent e) {
                     e.getComponent().requestFocusInWindow();
                 }
                 public void mouseClicked(MouseEvent e) {
-					
-					
+
+
 				}
             });
-			
+
 			time.addMouseListener(new MouseListener() {
                 public void mouseReleased(MouseEvent e) {
-					
+
 				}
                 public void mousePressed(MouseEvent e) {
-					
+
 				}
                 public void mouseExited(MouseEvent e) {
-                    
+
                 }
                 public void mouseEntered(MouseEvent e) {
                     e.getComponent().requestFocusInWindow();
                 }
                 public void mouseClicked(MouseEvent e) {
-					
-					
+
+
 				}
             });
-			
+
 			mainPanel.add(gamePanel);
 			mainPanel.add(chat);
-			
+
 
 			frame.setSize(1000, 500);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -149,12 +150,12 @@ public class Main{
 
 			// send packet with player's current coordinates
 			if(player.isAlive){
-				
+
 				message = new byte[256];
 				message = (player.x + "," + player.y + "," + player.username + ",coords").getBytes();
 				packet = new DatagramPacket(message, message.length, address, 9000);
 				socket.send(packet);
-				
+
 			}else{
 				message = new byte[256];
 				message = (player.username + ",dead").getBytes();
@@ -167,17 +168,17 @@ public class Main{
 			packet = new DatagramPacket(message, message.length);
 			socket.receive(packet);
 			String from_server = new String(packet.getData(), 0, packet.getLength());
-			
+
 			// if packet contains opponent coordinates
 			if(from_server.contains("opponent")){
-				
+
 				if(!from_server.contains("dead")){
 					try{
 						String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
 						int o_x = Integer.parseInt(opponent[1]);
 						int o_y = Integer.parseInt(opponent[2]);
 						String opponent_name = (opponent[3]).trim();
-						
+
 						Boolean opponent_exists = false;
 						for(Opponent o : game.opponents){	// update opponent
 							if(((o.getUsername()).trim()).equals(opponent_name)){
@@ -190,27 +191,27 @@ public class Main{
 
 						game.repaint();
 					}catch(Exception e){
-						
+
 					}
-					
+
 				}else{
 					String[] opponent = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					String opponent_name = (opponent[2]).trim();
-					
+
 					for(Opponent o : game.opponents){	// remove opponent
 						if(((o.getUsername()).trim()).equals(opponent_name)){
 							o.changeStatus();
 						}
 					}
 				}
-				
+
 			}else if(from_server.contains("projectile")){
 				try{
 					String[] projectile = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					int o_x = Integer.parseInt(projectile[1]);
 					int o_y = Integer.parseInt(projectile[2]);
 					String projectile_name = (projectile[3]).trim();
-						
+
 					Boolean projectile_exists = false;
 					for(Projectile_Blaster o : game.projectiles){	// update projectile
 						if(((o.getUsername()).trim()).equals(projectile_name)){
@@ -233,12 +234,12 @@ public class Main{
 
 						int ax = Integer.parseInt(ast_coordinates[0]);
 						int ay = Integer.parseInt(ast_coordinates[1]);
-						
+
 						System.out.println("Received asteroid coordinates of " + ax + ", " + ay);
 						game.addAsteroid(new Asteroid(ax-50, ay-700));
-						
+
 					}catch(Exception e){
-						
+
 					}
 			}else if(from_server.contains("WIN")){// if packet contains WIN flag, prompt that the player won
 
@@ -246,22 +247,22 @@ public class Main{
 						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 						String name = res[1];
-						
+
 						gamePanel.remove(time);
 						gamePanel.remove(game);
 						gamePanel.remove(info);
-						
+
 						blackPanel = new JPanel();
 						blackPanel.setBackground(Color.BLACK);
 						gamePanel.add(blackPanel, BorderLayout.CENTER);
-						
+
 						gamePanel.validate();
 						gamePanel.repaint();
 						JOptionPane.showMessageDialog(null,"You won, "+name+"! :D");
 						break;
-						
+
 					}catch(Exception e){
-						
+
 					}
 			}else if(from_server.contains("LOSE")){// if packet contains LOSE flag, prompt that the player lost
 
@@ -272,22 +273,22 @@ public class Main{
 						gamePanel.remove(time);
 						gamePanel.remove(game);
 						gamePanel.remove(info);
-						
+
 						blackPanel = new JPanel();
 						blackPanel.setBackground(Color.BLACK);
 						gamePanel.add(blackPanel, BorderLayout.CENTER);
-						
+
 						gamePanel.validate();
 						gamePanel.repaint();
 						JOptionPane.showMessageDialog(null,"Too bad you lost, "+name+"! :(");
 						break;
-						
+
 					}catch(Exception e){
-						
+
 					}
-					
+
 			}
-				
+
 			if(from_server.contains("GAME_CLOCK")){// if packet contains GAME_CLOCK flag, update JLabel on TimeFrame
 
 				try{
@@ -295,53 +296,66 @@ public class Main{
 
 					int game_time = Integer.parseInt(game_clock[1]);
 					System.out.println(game_time);
-					
+
 					time.setTime(Integer.toString(game_time));
 					gamePanel.validate();
 					gamePanel.repaint();
-					
+
 				}catch(Exception ex){
 
-				}		
+				}
 			}
-			
+
+			//Pang kuha ng Player List
+			// if(from_server.contains("PLAYER_LIST")){
+			//
+			// 	try{
+			// 		playerlist =  from_server.substring(12,from_server.length());
+			// 	}catch(Exception e){
+			//
+			// 	}
+			// }
+
 			if(from_server.contains("TIME_IS_UP")){// if packet contains TIME_IS_UP flag, display scores, rankings and ends the game
 
 					try{
-						String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
+						//String[] res = (new String(packet.getData(), 0, packet.getLength())).split(",");
+						//System.out.println(res);
+						//System.out.println(res[2]);
+						String scoresdata = from_server.substring(11,from_server.length());
 
-						String name = res[1];
-						
-						
 						//	fetch scores and rankings and add them to blackPanel
-						
 
 						gamePanel.remove(time);
 						gamePanel.remove(game);
 						gamePanel.remove(info);
-						
+
+						System.out.println(playerlist);
+
+						rankings = new RankFrame(scoresdata,playerlist);
 						blackPanel = new JPanel();
+						//JLabel sample = new JLabel(scoresdata);
+						//blackPanel.add(sample);
+						blackPanel.add(rankings);
 						blackPanel.setBackground(Color.BLUE);
-						JLabel sample = new JLabel("TIME IS UP!");
-						blackPanel.add(sample);
 						gamePanel.add(blackPanel, BorderLayout.CENTER);
-						
+
 						gamePanel.validate();
 						gamePanel.repaint();
 						JOptionPane.showMessageDialog(null,"Time's up!");
 						break;
 					}catch(Exception e){
-						
+
 					}
 			}
-		
+
 		}
 	}
 
 	private static void connectToServer(String username) throws IOException {
 		byte message[] = new byte[256];
 		message = username.getBytes();
-		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);	
+		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);
 		socket.send(packet);
 
 		try{
@@ -352,7 +366,7 @@ public class Main{
 
 			x = Integer.parseInt(coordinates[0]);
 			y = Integer.parseInt(coordinates[1]);
-			
+
 			player.x = x;
 			player.y = y;
 
@@ -361,7 +375,7 @@ public class Main{
 
 	private static Boolean startGame() throws IOException{
 		byte message[] = new byte[256];
-		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);	
+		DatagramPacket packet = new DatagramPacket(message, message.length, address, 9000);
 
 		while(true){
 			message = new byte[256];
