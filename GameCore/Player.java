@@ -104,6 +104,12 @@ public class Player extends Entity{
 
 	}
 
+	public boolean isShooting(){
+
+		return shoot_yes;
+
+	}
+
 	public void checkCollisions(){// collision detection with asteroids
 
 		ArrayList<Asteroid> asteroids = GameFrame.getAsteroidList();

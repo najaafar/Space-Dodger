@@ -6,7 +6,7 @@ import java.awt.BorderLayout;
 import javax.swing.JOptionPane;
 
 public class TimerFrame  extends JPanel{
-
+	Boolean timerEnd;
     Timer timer;
 	int time;
 	JLabel label;

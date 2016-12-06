@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Projectile_Blaster extends Entity{
 
-  int startX, startY;
+  int startX, startY; 
     private String username;
     private Image playerImg; 
     private boolean isAlive;
