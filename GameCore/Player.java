@@ -37,7 +37,7 @@ public class Player extends Entity{
 		x += velX;
 
 	// comment next line if testing
-	//	checkCollisions();	// checks if player is hit by asteroid
+		checkCollisions();	// checks if player is hit by asteroid
 
 	}
 
@@ -132,11 +132,22 @@ public class Player extends Entity{
 	    for(int i=0; i<projectiles.size(); i++){
 
 			Projectile_Blaster tempProjectile = projectiles.get(i);
+			if(!tempProjectile.getUsername().equals(username)){
+				if(getBounds().intersects(tempProjectile.getBounds())){
+	        		isAlive = false;
+				}
+			}
 
-			if(getBounds().intersects(tempProjectile.getBounds())){
+		}
 
+		ArrayList<Opponent> opponents = GameFrame.getOpponentsList();
+
+	    for(int i=0; i<opponents.size(); i++){
+
+			Opponent opponent = opponents.get(i);
+
+			if(getBounds().intersects(opponent.getBounds())){
 	        	isAlive = false;
-
 			}
 
 		}
