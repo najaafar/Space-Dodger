@@ -9,6 +9,7 @@ public class PlayerAddress{
 	private Point coordinates;
 	private boolean isAlive;
 	private boolean checked = false;
+	private int totalScore = 64;
 
 	public PlayerAddress(InetAddress a, String u, int p){
 		this.address = a;
@@ -27,8 +28,16 @@ public class PlayerAddress{
 		return this.username;
 	}
 
+	public void changeScore(int x){
+		this.totalScore = x;
+	}
+
 	public int getPort(){
 		return this.port;
+	}
+
+	public int getTotalScore(){
+		return this.totalScore;
 	}
 
 	public double getTime(){
@@ -50,7 +59,7 @@ public class PlayerAddress{
 	public void changeStatus(){
 		isAlive = false;
 	}
-	
+
 	public boolean getCheckedStatus(){
 		return this.checked;
 	}
@@ -58,5 +67,5 @@ public class PlayerAddress{
 	public void isChecked(){
 		checked = true;
 	}
-	
+
 }

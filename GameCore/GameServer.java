@@ -9,17 +9,16 @@ import java.util.concurrent.TimeUnit;
 public class GameServer {
 
 	static private GameServer gs;
-    static private ArrayList<PlayerAddress> clientAddresses;
+  static private ArrayList<PlayerAddress> clientAddresses;
 	static private ArrayList<Point> asteroids = new ArrayList<>();
 	static private DatagramSocket socket;
 	static private ArrayList<Point> points;
 	static protected int asteroidCount = 1;
 	static private int numOfPlayers = 0;
 	static private int playerDeathCount = 0;
-	static private boolean timeEnd; 
-	static private boolean shootProjectile; 
-	static private PlayerAddress playerProjectile; 
-
+	static private boolean timeEnd;
+	static private PlayerAddress playerProjectile;
+	static private String user_score;
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 	public final Runnable startGameClock;
@@ -31,7 +30,7 @@ public class GameServer {
 				DatagramPacket packet = null;
 
 				while(true){
-					
+
 					try{
 					TimeUnit.SECONDS.sleep(2L);
 					// send packet with asteroid coordinates every 2 seconds
@@ -55,38 +54,66 @@ public class GameServer {
 				}
 			}
 		};
-		
+
 		startGameClock = new Runnable(){
 			public void run(){
 				byte message[] = new byte[256];
 				DatagramPacket packet = null;
-				
-				int timet = 1 * 60; // convert to seconds
+
+				int timet = 1 * 10; // convert to seconds
 				long delay = timet * 1000;
-				
+
 				do{
 
 					try {
 
 						int minutes = timet / 60;
 						int seconds = timet % 60;
-						
+
 						for(PlayerAddress p : clientAddresses){// broadcasts game time (in seconds) to all players
-			
+
 							message = new byte[256];
 							message = ("GAME_CLOCK" + "," + timet).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
 					//		System.out.println(minutes +" minute(s), " + seconds + " second(s)");
 						}
-						
+
 						Thread.sleep(1000);
 						timet = timet - 1;
 						delay = delay - 1000;
 
 					}catch(Exception ex) {}
 				}while(delay > -1);
-				
+
+				try{// broadcasts to all players that the timer has ended
+
+					for(PlayerAddress q : clientAddresses){
+						for(PlayerAddress p : clientAddresses){
+							message = new byte[256];
+							message = ("PLAYA" + "," + p.getUsername()).getBytes();
+							packet = new DatagramPacket(message, message.length, q.getAddress(), q.getPort());
+							socket.send(packet);
+						}
+					}
+
+					String scorelist = "";
+
+					for(PlayerAddress p : clientAddresses){
+						scorelist = scorelist + Integer.toString(p.getTotalScore()) + ",";
+					}
+
+
+					for(PlayerAddress p : clientAddresses){
+						message = new byte[256];
+						message = ("SCORE" + "," + scorelist).getBytes();
+						packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+						socket.send(packet);
+					}
+
+				}catch(Exception ek){
+				}
+
 				try{// broadcasts to all players that the timer has ended
 					for(PlayerAddress p : clientAddresses){
 						message = new byte[256];
@@ -94,12 +121,12 @@ public class GameServer {
 						packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 						socket.send(packet);
 					}
-					
+
 				}catch(Exception el){
 				}
 			}
 		};
-		
+
 	}
 
 	public static void main(String args[]) throws IOException {
@@ -121,8 +148,8 @@ public class GameServer {
 		do{
 		    test = new Point();
 		    test.x = position.nextInt(400) + 50;
-		    test.y = position.nextInt(400) + 50;   
-		    set.add(test);     
+		    test.y = position.nextInt(400) + 50;
+		    set.add(test);
 		}
 		while (set.size()<size);
 
@@ -169,24 +196,23 @@ public class GameServer {
 				for(PlayerAddress q : clientAddresses){
 					if(!p.getUsername().equals(q.getUsername())){
 						if(q.getStatus()){
-							
+
 							message = new byte[256];
 							message = ("opponent," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
-							
+
 						}else{
-							
+
 							message = new byte[256];
 							message = ("opponent,dead," + q.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
-							
+
 						}
 					}
 				}
-
-			} 
+			}
 
 			// receive a message
 				message = new byte[256];
@@ -196,15 +222,15 @@ public class GameServer {
 
 			// if message contains coordinates of a player
 				if(from_player.contains("coords")){
-					
+
 					String[] coords = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					for(PlayerAddress q : clientAddresses){
 						if((q.getUsername().trim()).equals((coords[2]).trim())){
 							q.changeCoords(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 						}
 					}
-			
-			// if message contains projectile		
+
+			// if message contains projectile
 				}else if(from_player.contains("projectile")){
 					System.out.print("Received projectile");
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -214,8 +240,8 @@ public class GameServer {
 							break;
 						}
 					}
-					
-					// broadcast projectiles coordinates to other players
+
+					// broadcast players' projectiles coordinates
 					for(PlayerAddress p : clientAddresses){
 							if(!p.getUsername().equals(playerProjectile.getUsername())){
 									message = new byte[256];
@@ -226,7 +252,7 @@ public class GameServer {
 					}
 
 				}else if(from_player.contains("dead")){
-					
+
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					for(PlayerAddress q : clientAddresses){
 						if((q.getUsername().trim()).equals((msg[0]).trim())){
@@ -237,61 +263,70 @@ public class GameServer {
 							}
 						}
 					}
-					
+
 				}else if(from_player.contains("logout")){
-					
+
 					System.out.println("logout a player");
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
 					removePlayer(msg[0].trim());
-					
+
+				}else if(from_player.contains("score")){
+						//System.out.print("Received score");
+						String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
+						for(PlayerAddress q : clientAddresses){
+							if((q.getUsername().trim()).equals((msg[1]).trim())){
+								q.changeScore(Integer.parseInt(msg[0]));
+								//System.out.println("Good Sacrifice");
+							}
+						}
 				}
-				
-			/*	
+
+			/*
 				else if(from_player.contains("TIME_END")){
-					
+
 					System.out.println("Timer has ended.");
-					
+
 					for(PlayerAddress p : clientAddresses){
-			
+
 							message = new byte[256];
 							message = ("TIME_IS_UP," + p.getUsername()).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
-						
+
 					}
 
 				}
-			*/	
+			*/
 		//		System.out.println("Current Death Count: "+playerDeathCount);
-				
+
 				if(playerDeathCount == (numOfPlayers - 1)){// checks if only one player is left alive
-					
+
 					for(PlayerAddress p : clientAddresses){
 						for(PlayerAddress q : clientAddresses){
 							if(p.getUsername().equals(q.getUsername())){
 								if(q.getStatus()){
-									
+
 									message = new byte[256];
 									message = ("WIN," + q.getUsername()).getBytes();
 									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 									socket.send(packet);
 									break;
-									
+
 								}else{
-									
+
 									message = new byte[256];
 									message = ("LOSE," + q.getUsername()).getBytes();
 									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 									socket.send(packet);
 									break;
-									
+
 								}
 							}
 						}
 					}
 				}
-				
-				
+
+
 		}
 	}
 
@@ -323,7 +358,7 @@ public class GameServer {
 
 	protected static void removePlayer(String name){
 		int i = 0;
-		
+
 		for(PlayerAddress q : clientAddresses){
 			if(name.equals(q.getUsername().trim())){
 				System.out.println(name + " removed");

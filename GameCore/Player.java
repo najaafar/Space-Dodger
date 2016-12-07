@@ -17,18 +17,19 @@ public class Player extends Entity{
 	private Image playerImg;
 	boolean isAlive;
 	boolean shoot_send = false;
+	int lifespan = 0;
 
 	/*  after n collisions, player dies
 		int life = 3;
 	*/
-	
+
 	public Player(int x, int y, String username){
-	
+
 		super(x, y);
 		this.username = username;
 		playerImg = (new ImageIcon("player.png")).getImage();
 		isAlive = true;
-	
+
 	}
 
 	public void update(){
@@ -37,7 +38,7 @@ public class Player extends Entity{
 		x += velX;
 
 	// comment next line if testing
-		checkCollisions();	// checks if player is hit by asteroid
+	//	checkCollisions();	// checks if player is hit by asteroid
 
 	}
 
@@ -120,7 +121,7 @@ public class Player extends Entity{
 			Asteroid tempAsteroid = asteroids.get(i);
 
 			if(getBounds().intersects(tempAsteroid.getBounds())){
-				
+
 				isAlive = false;
 
 			}
@@ -132,26 +133,19 @@ public class Player extends Entity{
 	    for(int i=0; i<projectiles.size(); i++){
 
 			Projectile_Blaster tempProjectile = projectiles.get(i);
-			if(!tempProjectile.getUsername().equals(username)){
-				if(getBounds().intersects(tempProjectile.getBounds())){
-	        		isAlive = false;
-				}
-			}
 
-		}
+			if(getBounds().intersects(tempProjectile.getBounds())){
 
-		ArrayList<Opponent> opponents = GameFrame.getOpponentsList();
-
-	    for(int i=0; i<opponents.size(); i++){
-
-			Opponent opponent = opponents.get(i);
-
-			if(getBounds().intersects(opponent.getBounds())){
 	        	isAlive = false;
+
 			}
 
 		}
 
+	}
+
+	public void updateLifespan(int x){
+		lifespan = x;
 	}
 
 	public Rectangle getBounds(){// gets image boundary (to be used for collision detection)
@@ -160,6 +154,6 @@ public class Player extends Entity{
 
 	}
 
-	
+
 
 }
