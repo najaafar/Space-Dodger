@@ -168,4 +168,9 @@ public class GameFrame extends JPanel implements ActionListener{
 
 	}
 
+	public static ArrayList<Opponent> getOpponentsList(){// gets list of opponents
+		return opponents;
+
+	}
+
 }

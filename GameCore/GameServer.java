@@ -212,7 +212,7 @@ public class GameServer {
 						}
 					}
 					
-					// broadcast players' projectiles coordinates
+					// broadcast projectiles coordinates to other players
 					for(PlayerAddress p : clientAddresses){
 							if(!p.getUsername().equals(playerProjectile.getUsername())){
 									message = new byte[256];

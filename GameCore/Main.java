@@ -39,6 +39,21 @@ public class Main{
 
 		username = args[0];
 
+		JFrame frame = new JFrame("Space Dodger: [ "+username+ " ]");
+
+		frame.setSize(1000, 500);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		JPanel welcomePanel = new JPanel();
+		JLabel header_label = new JLabel("palagay nalang ng mechanics dito huhu di ako marunong mag-gui");
+
+		welcomePanel.add(header_label);
+		welcomePanel.add(sub_label);
+
+		frame.add(welcomePanel);	// get from server
+		frame.setResizable(false);
+		frame.setVisible(true);
+
 		connectToServer(username);// attempt to connect to host
 		
 		System.out.println("Waiting for players...");
@@ -49,7 +64,6 @@ public class Main{
 			game = new GameFrame(player);
 			info = new InfoPlayerFrame();
 			game.setPreferredSize(new Dimension(500,480));
-			JFrame frame = new JFrame("Space Dodger: [ "+username+ " ]");
 			mainPanel = new JPanel();
 			gamePanel = new JPanel();
 			gamePanel.setLayout(new BorderLayout());
@@ -120,12 +134,9 @@ public class Main{
 			mainPanel.add(gamePanel);
 			mainPanel.add(chat);
 			
+			frame.setContentPane(mainPanel);
+			frame.revalidate();
 
-			frame.setSize(1000, 500);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.add(mainPanel);	// get from server
-			frame.setResizable(false);
-			frame.setVisible(true);
 			game.setFocusable(true);
 			chat.setFocusable(false);
 		}
@@ -219,8 +230,9 @@ public class Main{
 					int p_y = Integer.parseInt(projectile[2]);
 					String p_from = (projectile[3]).trim();
 						
-					System.out.println("Received asteroid coordinates of " + p_x + ", " + p_y + " from " + p_from);
+					System.out.println("Received projectile coordinates of " + p_x + ", " + p_y + " from " + p_from);
 					game.projectiles.add(new Projectile_Blaster(p_x, p_y, p_from));
+
 				}catch(Exception e){
 				}
 

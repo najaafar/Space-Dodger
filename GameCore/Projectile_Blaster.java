@@ -26,9 +26,6 @@ public class Projectile_Blaster extends Entity{
 
 		y += -5;
 
-	/* Uncomment this and implement function if player can shoot projectiles
-		checkCollisions();
-	*/
 	}
 
     public void updateCoords(int x, int y){
