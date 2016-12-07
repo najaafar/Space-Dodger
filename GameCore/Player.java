@@ -16,18 +16,19 @@ public class Player extends Entity{
 	boolean shoot_yes = false;
 	private Image playerImg;
 	boolean isAlive;
+	int kills = 0;
 
 	/*  after n collisions, player dies
 		int life = 3;
 	*/
-	
+
 	public Player(int x, int y, String username){
-	
+
 		super(x, y);
 		this.username = username;
 		playerImg = (new ImageIcon("player.png")).getImage();
 		isAlive = true;
-	
+
 	}
 
 	public void update(){
@@ -35,6 +36,14 @@ public class Player extends Entity{
 		y += velY;
 		x += velX;
 
+	// comment next line if testing
+	//	checkCollisions();	// checks if player is hit by asteroid
+
+	}
+
+	public void updateKills(){
+
+		kills ++;
 	// comment next line if testing
 	//	checkCollisions();	// checks if player is hit by asteroid
 
@@ -113,7 +122,7 @@ public class Player extends Entity{
 			Asteroid tempAsteroid = asteroids.get(i);
 
 			if(getBounds().intersects(tempAsteroid.getBounds())){
-				
+
 				isAlive = false;
 
 			}
@@ -128,6 +137,6 @@ public class Player extends Entity{
 
 	}
 
-	
+
 
 }

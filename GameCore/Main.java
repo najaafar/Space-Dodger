@@ -298,6 +298,7 @@ public class Main{
 					System.out.println(game_time);
 
 					time.setTime(Integer.toString(game_time));
+					info.updateInfo(Integer.toString(player.kills));
 					gamePanel.validate();
 					gamePanel.repaint();
 

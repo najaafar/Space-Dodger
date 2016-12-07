@@ -24,9 +24,9 @@ public class GameFrame extends JPanel implements ActionListener{
 	public static int level = 1;
 
 	Image bg;
-	
+
 	public GameFrame(Player player){
-	
+
 		this.player = player;
 
 		setFocusable(true);
@@ -40,7 +40,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawImage(bg, 0, 0, null);
+		//g2d.drawImage(bg, 0, 0, null);
 
 		if(player.isAlive){
 			player.draw(g2d);
@@ -56,7 +56,7 @@ public class GameFrame extends JPanel implements ActionListener{
 
 		for(Projectile_Blaster tempProjectile : projectiles){
 			if(tempProjectile.getStatus()){
-				tempProjectile.draw(g2d);	
+				tempProjectile.draw(g2d);
 			}
  		}
 
@@ -71,10 +71,12 @@ public class GameFrame extends JPanel implements ActionListener{
 			addProjectile(new Projectile_Blaster(getPlayerPositionX(), getPlayerPositionY(), getPlayerUsername()));
 		}
 
-		for(int i=0; i<asteroids.size(); i++){ 
+		for(int i=0; i<asteroids.size(); i++){
 			Asteroid tempAsteroid = asteroids.get(i);
 
 			if(tempAsteroid.checkCollisions()==true){
+				System.out.println("Asteroid killed"+player.kills);
+				player.updateKills();
 				asteroids.remove(i);
 				i--;
 				continue;
