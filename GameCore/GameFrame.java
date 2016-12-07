@@ -67,9 +67,11 @@ public class GameFrame extends JPanel implements ActionListener{
 		player.update();
 
 		if(syncCounter>50&& getPlayerShoot()==true){
-			syncCounter = 0;
+			syncCounter = 0; 
+			//addProjectile(new Projectile_Blaster(getPlayerPositionX(), getPlayerPositionY(), getPlayerUsername()));
+			 
 			addProjectile(new Projectile_Blaster(getProjectilePositionX(player.isShooting()), getProjectilePositionY(player.isShooting()), getPlayerUsername()));
-			player.shoot_send = true;
+			player.shoot_send = true; 
 		}
 
 		for(int i=0; i<asteroids.size(); i++){ 
