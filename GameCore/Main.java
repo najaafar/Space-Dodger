@@ -44,6 +44,11 @@ public class Main{
 		System.out.println("Waiting for players...");
 
 		if(startGame()){	// if host has sent message to start the game
+
+			//show splash screen 
+    		SplashScreen splash = new SplashScreen(5000); 
+    		splash.showSplashAndExit();
+
 			// create game gui
 			player = new Player((int) x, (int) y, username);
 			game = new GameFrame(player);
