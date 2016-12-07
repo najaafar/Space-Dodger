@@ -23,9 +23,6 @@ public class Asteroid extends Entity{
 
 		y += 2;
 
-	/* Uncomment this and implement function if player can shoot projectiles
-		checkCollisions();
-	*/
 		checkCollisions();
 		checkOffScreen();
 	}
@@ -41,10 +38,7 @@ public class Asteroid extends Entity{
 
 		if(y >= 700){
 
-			//Random rand = new Random();
 			y = startY;
-			//y = rand.nextInt(500)-700;
-			//x = rand.nextInt(500);
 
 		}
 
