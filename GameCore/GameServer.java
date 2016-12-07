@@ -16,14 +16,10 @@ public class GameServer {
 	static protected int asteroidCount = 1;
 	static private int numOfPlayers = 0;
 	static private int playerDeathCount = 0;
-<<<<<<< HEAD
 	static private boolean timeEnd; 
 	static private boolean shootProjectile; 
 	static private PlayerAddress playerProjectile; 
-=======
-	static private boolean timeEnd;
-	static private PlayerAddress playerProjectile;
->>>>>>> AddedMechanics
+
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 	public final Runnable startGameClock;
@@ -189,11 +185,8 @@ public class GameServer {
 						}
 					}
 				}
-<<<<<<< HEAD
+
 			} 
-=======
-			}
->>>>>>> AddedMechanics
 
 			// receive a message
 				message = new byte[256];

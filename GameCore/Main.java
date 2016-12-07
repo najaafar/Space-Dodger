@@ -46,6 +46,7 @@ public class Main{
 		JLabel background1 = new JLabel(new ImageIcon("mechanics.png"));
 		JPanel welcomePanel = new JPanel();
 
+		welcomePanel.add(background1);
 		frame.add(welcomePanel);	// get from server
 		frame.setResizable(false);
 		frame.setVisible(true);
