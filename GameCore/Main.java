@@ -147,9 +147,17 @@ public class Main{
 				socket.send(packet);
 			}
 
+			// send packet with player's projectile
+			if(player.isShooting() && player.shoot_send){
+				player.shoot_send = false;
+				message = new byte[256];
+				message = (player.username + ",projectile").getBytes();
+				packet = new DatagramPacket(message, message.length, address, 9000);
+				socket.send(packet);
+			}
+
 			// send packet with player's current coordinates
 			if(player.isAlive){
-				
 				message = new byte[256];
 				message = (player.x + "," + player.y + "," + player.username + ",coords").getBytes();
 				packet = new DatagramPacket(message, message.length, address, 9000);
@@ -207,34 +215,23 @@ public class Main{
 			}else if(from_server.contains("projectile")){
 				try{
 					String[] projectile = (new String(packet.getData(), 0, packet.getLength())).split(",");
-					int o_x = Integer.parseInt(projectile[1]);
-					int o_y = Integer.parseInt(projectile[2]);
-					String projectile_name = (projectile[3]).trim();
+					int p_x = Integer.parseInt(projectile[1]);
+					int p_y = Integer.parseInt(projectile[2]);
+					String p_from = (projectile[3]).trim();
 						
-					Boolean projectile_exists = false;
-					for(Projectile_Blaster o : game.projectiles){	// update projectile
-						if(((o.getUsername()).trim()).equals(projectile_name)){
-							o.updateCoords(o_x, o_y);
-							projectile_exists = true;
-						}
-					}
-					if(!projectile_exists)				// add projectile
-						game.projectiles.add(new Projectile_Blaster(o_x, o_y, projectile_name));
-
-					game.repaint();
+					System.out.println("Received asteroid coordinates of " + p_x + ", " + p_y + " from " + p_from);
+					game.projectiles.add(new Projectile_Blaster(p_x, p_y, p_from));
 				}catch(Exception e){
-					//read projectile failed
 				}
 
 			}else if(from_server.contains("asteroid")){// if packet contains asteroid coordinates
-				// TODO: minsan hindi nakukuha yung message kahit na-broadcast
 					try{
 						String[] ast_coordinates = (new String(packet.getData(), 0, packet.getLength())).split(",");
 
 						int ax = Integer.parseInt(ast_coordinates[0]);
 						int ay = Integer.parseInt(ast_coordinates[1]);
 						
-						System.out.println("Received asteroid coordinates of " + ax + ", " + ay);
+					//	System.out.println("Received asteroid coordinates of " + ax + ", " + ay);
 						game.addAsteroid(new Asteroid(ax-50, ay-700));
 						
 					}catch(Exception e){
