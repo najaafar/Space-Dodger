@@ -19,7 +19,7 @@ public class SplashScreen extends JWindow {
  
   public void showSplash() {
     JPanel content = (JPanel) getContentPane();
-    content.setBackground(Color.white);
+    content.setBackground(Color.BLACK);
  
     int width = 700;
     int height = 200;
@@ -29,9 +29,10 @@ public class SplashScreen extends JWindow {
     setBounds(x, y, width, height);
 
     // Build the splash screen
-    JLabel label = new JLabel(new ImageIcon("player.png"));
-    JLabel copyrt = new JLabel("Loading Space Dodger...", JLabel.CENTER);
+    JLabel label = new JLabel(new ImageIcon("logo.png"));
+    JLabel copyrt = new JLabel("Loading ...", JLabel.CENTER);
     copyrt.setFont(new Font("Sans-Serif", Font.BOLD, 12));
+    copyrt.setForeground(Color.WHITE);
     content.add(label, BorderLayout.CENTER);
     content.add(copyrt, BorderLayout.SOUTH); 
  
@@ -42,9 +43,6 @@ public class SplashScreen extends JWindow {
     } catch (Exception e) {}
 
     setVisible(false);
-  }
-
-  public void showSplashAndExit() {
-    showSplash(); 
   } 
+ 
 }
