@@ -19,7 +19,7 @@ public class GameServer {
 	static private boolean timeEnd; 
 	static private boolean shootProjectile; 
 	static private PlayerAddress playerProjectile; 
-	
+
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 	public final Runnable startGameClock;
 
@@ -185,23 +185,6 @@ public class GameServer {
 					}
 				}
 			} 
-			// broadcast players' projectiles coordinates  
-
-			for(PlayerAddress p : clientAddresses){
-				for(PlayerAddress q : clientAddresses){
-					if(!p.getUsername().equals(q.getUsername())){
-						if(q.getStatus()){
-
-							message = new byte[256];
-							message = ("projectile," + ((int) (q.getCoords().getX())) + "," + ((int) (q.getCoords().getY())) + "," + q.getUsername()).getBytes();
-							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
-							socket.send(packet);
-							
-						} 
-					}
-				}
-			}
-  
 
 			// receive a message
 				message = new byte[256];
