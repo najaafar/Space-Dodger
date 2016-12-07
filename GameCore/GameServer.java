@@ -16,13 +16,10 @@ public class GameServer {
 	static protected int asteroidCount = 1;
 	static private int numOfPlayers = 0;
 	static private int playerDeathCount = 0;
-	static private boolean timeEnd;
-<<<<<<< HEAD
-	static private boolean shootProjectile;
-=======
-	static private PlayerAddress playerProjectile;
->>>>>>> 9f88c93527d24fb8d1da1e40cd08c93629ce63b4
-
+	static private boolean timeEnd; 
+	static private boolean shootProjectile; 
+	static private PlayerAddress playerProjectile; 
+	
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 	public final Runnable startGameClock;
 
@@ -187,9 +184,7 @@ public class GameServer {
 						}
 					}
 				}
-			}
-<<<<<<< HEAD
-
+			} 
 			// broadcast players' projectiles coordinates  
 
 			for(PlayerAddress p : clientAddresses){
@@ -206,9 +201,7 @@ public class GameServer {
 					}
 				}
 			}
- 
-=======
->>>>>>> 9f88c93527d24fb8d1da1e40cd08c93629ce63b4
+  
 
 			// receive a message
 				message = new byte[256];
