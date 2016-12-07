@@ -17,7 +17,11 @@ public class GameServer {
 	static private int numOfPlayers = 0;
 	static private int playerDeathCount = 0;
 	static private boolean timeEnd;
+<<<<<<< HEAD
 	static private boolean shootProjectile;
+=======
+	static private PlayerAddress playerProjectile;
+>>>>>>> 9f88c93527d24fb8d1da1e40cd08c93629ce63b4
 
 	public final Runnable sendAsteroid;	// has delay of 2 seconds
 	public final Runnable startGameClock;
@@ -46,7 +50,7 @@ public class GameServer {
 							for(PlayerAddress p : clientAddresses){
 								packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 								socket.send(packet);
-								System.out.println("Sent asteroid coordinates of " + asteroid.getX() + ", " + asteroid.getY() + " to " + p.getUsername());
+						//		System.out.println("Sent asteroid coordinates of " + asteroid.getX() + ", " + asteroid.getY() + " to " + p.getUsername());
 							}
 						}
 					} catch(IOException ex) {}
@@ -75,7 +79,7 @@ public class GameServer {
 							message = ("GAME_CLOCK" + "," + timet).getBytes();
 							packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
 							socket.send(packet);
-							System.out.println(minutes +" minute(s), " + seconds + " second(s)");
+					//		System.out.println(minutes +" minute(s), " + seconds + " second(s)");
 						}
 						
 						Thread.sleep(1000);
@@ -184,6 +188,7 @@ public class GameServer {
 					}
 				}
 			}
+<<<<<<< HEAD
 
 			// broadcast players' projectiles coordinates  
 
@@ -202,6 +207,8 @@ public class GameServer {
 				}
 			}
  
+=======
+>>>>>>> 9f88c93527d24fb8d1da1e40cd08c93629ce63b4
 
 			// receive a message
 				message = new byte[256];
@@ -209,7 +216,7 @@ public class GameServer {
 				socket.receive(packet);
 				String from_player = new String(packet.getData(), 0, packet.getLength());
 
-			// if message contained coordinates of a player
+			// if message contains coordinates of a player
 				if(from_player.contains("coords")){
 					
 					String[] coords = (new String(packet.getData(), 0, packet.getLength())).split(",");
@@ -218,7 +225,28 @@ public class GameServer {
 							q.changeCoords(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 						}
 					}
+			
+			// if message contains projectile		
+				}else if(from_player.contains("projectile")){
+					System.out.print("Received projectile");
+					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");
+					for(PlayerAddress q : clientAddresses){
+						if((q.getUsername().trim()).equals((msg[0]).trim())){
+							playerProjectile = q;
+							break;
+						}
+					}
 					
+					// broadcast players' projectiles coordinates
+					for(PlayerAddress p : clientAddresses){
+							if(!p.getUsername().equals(playerProjectile.getUsername())){
+									message = new byte[256];
+									message = ("projectile," + ((int) (playerProjectile.getCoords().getX())) + "," + ((int) (playerProjectile.getCoords().getY())) + "," + playerProjectile.getUsername()).getBytes();
+									packet = new DatagramPacket(message, message.length, p.getAddress(), p.getPort());
+									socket.send(packet);
+							}
+					}
+
 				}else if(from_player.contains("dead")){
 					
 					String[] msg = (new String(packet.getData(), 0, packet.getLength())).split(",");

@@ -16,6 +16,7 @@ public class Player extends Entity{
 	boolean shoot_yes = false;
 	private Image playerImg;
 	boolean isAlive;
+	boolean shoot_send = false;
 
 	/*  after n collisions, player dies
 		int life = 3;
@@ -121,6 +122,20 @@ public class Player extends Entity{
 			if(getBounds().intersects(tempAsteroid.getBounds())){
 				
 				isAlive = false;
+
+			}
+
+		}
+
+		ArrayList<Projectile_Blaster> projectiles = GameFrame.getProjectileList();
+
+	    for(int i=0; i<projectiles.size(); i++){
+
+			Projectile_Blaster tempProjectile = projectiles.get(i);
+
+			if(getBounds().intersects(tempProjectile.getBounds())){
+
+	        	isAlive = false;
 
 			}
 
